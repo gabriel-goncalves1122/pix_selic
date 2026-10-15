@@ -1,0 +1,53 @@
+# -----------------------------------------------------------------------------
+# .gitignore — Engenharia de Dados (ECOX14)
+# -----------------------------------------------------------------------------
+
+# Ambientes Virtuais
+venv/
+.venv/
+env/
+ENV/
+
+# Arquivos e Diretórios Temporários (ex: DuckDB temp storage)
+.tmp/
+*.tmp
+duckdb_temp_storage_*
+
+# Caches e artefatos Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Segredos, Chaves de API e Credenciais (NUNCA versionar)
+.env
+*.env
+.env.*
+kaggle.json
+
+# IDEs e Sistema Operacional
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Camadas de Dados do Data Lake (Bronze, Prata, Ouro)
+# Os dados são gerados e orquestrados pelos pipelines de ETL/ingestão
+Aula/dados/bronze/*
+Aula/dados/prata/*
+Aula/dados/ouro/*
+Projetofinal/bronze/data/*
+Projetofinal/prata/data/*
+Projetofinal/ouro/data/*
+dados/bronze/*
+dados/prata/*
+dados/ouro/*
+
+# Exceção: manter as pastas visíveis no repositório através de .gitkeep
+!**/dados/**/.gitkeep
+!**/data/**/.gitkeep
