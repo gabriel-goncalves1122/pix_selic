@@ -18,8 +18,10 @@ Projetofinal/apresentacao/
 │   ├── 05_tabela_depara.html       # Matriz De/Para com exemplos práticos e funções
 │   ├── 06_metricas_parquet.html    # Gráficos Chart.js e KPIs de compressão Parquet
 │   ├── 07_resultados_nativos.html  # Curva Pix (SVG) e Funil do MED (CSS)
-│   └── 08_roadmap_ouro.html        # Modelagem relacional da Camada Ouro e Checklist
-├── compilar.py                     # Script Python para montar o index.html final
+│   ├── 08_macro_selic.html         # Resultados Macroeconômicos: Taxa Selic & Mercado Aberto
+│   └── 09_roadmap_ouro.html        # Modelagem relacional da Camada Ouro e Checklist
+├── compilar.py                     # Script Python para empacotar index_offline.html (modo offline)
+├── ROTEIRO_APRESENTACAO.md         # Guia completo do apresentador e respostas para a banca
 ├── css/
 │   └── custom.css                  # Estilos do tema Clean Tech Claro
 ├── js/
@@ -27,24 +29,28 @@ Projetofinal/apresentacao/
 ├── data/
 │   ├── metricas.json
 │   └── metricas.js
-└── index.html                      # Apresentação compilada pronta para exibição
+├── index.html                      # Carregador dinâmico modular (Live Server / HTTP)
+└── index_offline.html              # Apresentação consolidada para duplo clique (file://)
 ```
 
 ---
 
-## ⚡ Como Editar e Compilar
+## ⚡ Como Apresentar e Editar
 
-1. **Edite o slide desejado:** Modifique diretamente o arquivo correspondente dentro da pasta `slides/` (ex: `slides/05_tabela_depara.html`).
-2. **Compile a apresentação:**
+### Modo Principal: Live Server (Sem precisar compilar!)
+Como você usa a extensão **Live Server** no VS Code:
+1. Abra a pasta no VS Code.
+2. Clique com o botão direito em `index.html` $\rightarrow$ **"Open with Live Server"** (ou clique no botão **"Go Live"** no rodapé).
+3. Qualquer alteração salva em qualquer arquivo da pasta `slides/*.html` é **recarregada automaticamente no navegador**, sem precisar rodar nenhum comando!
+
+### Modo Portátil / Offline (Duplo clique sem servidor):
+Se precisar levar a apresentação em um pendrive ou abrir sem Live Server:
+1. Execute:
    ```bash
-   python3 Projetofinal/apresentacao/compilar.py
+   py Projetofinal/apresentacao/compilar.py
    ```
-3. **Abra no Navegador:**
-   - Basta dar **duplo clique** em `Projetofinal/apresentacao/index.html` (funciona 100% offline via `file://`).
-   - Ou via servidor local:
-     ```bash
-     python3 -m http.server -d Projetofinal/apresentacao 8000
-     ```
+2. Um arquivo `index_offline.html` monolítico será gerado, pronto para ser aberto diretamente com duplo clique (`file://`).
+
 
 ---
 

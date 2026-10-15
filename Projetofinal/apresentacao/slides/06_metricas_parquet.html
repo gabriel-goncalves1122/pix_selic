@@ -3,32 +3,33 @@
   <div class="slide-header">
     <span class="slide-tag">MÉTRICAS DO PIPELINE</span>
     <h2>Antes × Depois em Números & Compressão Parquet</h2>
+    <p class="slide-subdesc">Impacto quantitativo da higienização de tipos e conversão colunar nos ecossistemas Pix e Macro.</p>
   </div>
 
-  <div class="cols">
+  <div class="cols cols-charts-compact">
     <div class="chart-container-card">
-      <div class="chart-box" style="height: 230px;"><canvas id="c-fraudes"></canvas></div>
-      <p class="mini-chart-desc"><span data-m="datasets.fraudes.prata.linhas">52</span> meses · <span data-m="datasets.fraudes.bronze.texto">11</span> colunas texto ➔ <span data-m="datasets.fraudes.prata.texto">0</span> na Prata</p>
+      <div class="chart-box"><canvas id="c-pix"></canvas></div>
+      <p class="mini-chart-desc">741k transações · 52 safras fraudes · 21 textos ➔ 9 legítimos</p>
     </div>
 
     <div class="chart-container-card">
-      <div class="chart-box" style="height: 230px;"><canvas id="c-trans"></canvas></div>
-      <p class="mini-chart-desc"><span data-m="datasets.transacoes.prata.linhas">741.383</span> linhas processadas · Parquet colunar otimizado</p>
+      <div class="chart-box"><canvas id="c-macro"></canvas></div>
+      <p class="mini-chart-desc">82 safras mercado aberto · Séries SGS · 8 textos ➔ 1 categórico</p>
     </div>
   </div>
 
-  <div class="kpi-row">
+  <div class="kpi-row kpi-row-compact">
     <div class="kpi-card light-kpi">
-      <div class="val" style="color: #003366;">78.2 MB ➔ 11.2 MB</div>
-      <div class="lbl">Armazenamento: Conversão CSV para Apache Parquet (Snappy)</div>
+      <div class="val" style="color: #003366;">154 CSVs ➔ 4 Parquets</div>
+      <div class="lbl">Unificação de safras e arquivos fragmentados</div>
     </div>
     <div class="kpi-card light-kpi">
-      <div class="val" style="color: #008779;">-85.7%</div>
-      <div class="lbl">Redução de I/O em disco para queries colunares analíticas</div>
+      <div class="val" style="color: #008779;">-85% I/O & Espaço</div>
+      <div class="lbl">Compressão colunar Apache Parquet (Snappy)</div>
     </div>
     <div class="kpi-card light-kpi">
-      <div class="val" style="color: #059669;">100%</div>
-      <div class="lbl">Valores monetários e taxas convertidos com precisão float64</div>
+      <div class="val" style="color: #059669;">100% Tipagem Nativa</div>
+      <div class="lbl">Zero tipos string em valores monetários e taxas</div>
     </div>
   </div>
 </section>

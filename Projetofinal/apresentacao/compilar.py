@@ -5,10 +5,14 @@ Concatena os arquivos modulares de slides/*.html no index.html final.
 Permite editar cada slide separadamente e abrir o index.html via file:// sem travas de CORS.
 """
 from pathlib import Path
+import sys
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 
 DIR = Path(__file__).parent
 SLIDES_DIR = DIR / "slides"
-OUTPUT_FILE = DIR / "index.html"
+OUTPUT_FILE = DIR / "index_offline.html"
 
 HTML_TEMPLATE = """<!doctype html>
 <html lang="pt-BR">
@@ -32,6 +36,7 @@ HTML_TEMPLATE = """<!doctype html>
 <script src="vendor/reveal.js/plugin/notes/notes.js"></script>
 <script src="vendor/chart.umd.min.js"></script>
 <script src="data/metricas.js"></script>
+<script src="js/graficos.js"></script>
 <script>
   Reveal.initialize({
     hash: true,
@@ -41,9 +46,12 @@ HTML_TEMPLATE = """<!doctype html>
     margin: 0.05,
     transition: 'fade',
     plugins: [RevealNotes]
+  }).then(function() {
+    if (window.iniciarGraficos) {
+      window.iniciarGraficos();
+    }
   });
 </script>
-<script src="js/graficos.js"></script>
 </body>
 </html>
 """

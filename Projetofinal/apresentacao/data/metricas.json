@@ -371,6 +371,30 @@
         ],
         "mb_parquet": 0.03
       }
+    },
+    "pix": {
+      "bronze": {
+        "texto": 21,
+        "numericas": 15
+      },
+      "prata": {
+        "texto": 9,
+        "numericas": 27
+      },
+      "linhas": 741435,
+      "desc": "741k transações + 52 meses fraudes"
+    },
+    "macro": {
+      "bronze": {
+        "texto": 8,
+        "numericas": 1
+      },
+      "prata": {
+        "texto": 1,
+        "numericas": 11
+      },
+      "linhas": 2978,
+      "desc": "82 safras mercado aberto + séries diárias SGS"
     }
   },
   "staircase": {

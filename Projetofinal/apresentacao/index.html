@@ -10,579 +10,79 @@
   <link rel="stylesheet" href="css/custom.css">
 </head>
 <body>
-<div class="reveal"><div class="slides">
-
-  <!-- 01_capa.html -->
-<!-- 01_capa.html -->
-<section class="slide-capa">
-  <div class="capa-header">
-    <span class="badge-inst bcb">BANCO CENTRAL DO BRASIL</span>
-    <span class="badge-inst pix">PIX DADOS ABERTOS</span>
-    <span class="badge-inst sgs">SGS & OLINDA</span>
+<div class="reveal">
+  <div class="slides" id="slides-container">
+    <!-- Slides modulares carregados dinamicamente via Live Server -->
   </div>
-  
-  <h1 class="titulo-principal">Pix × "Custo Brasil"</h1>
-  <p class="subtitulo-capa">Engenharia de Dados aplicada à evolução dos meios de pagamento e correlação com inflação (IPCA) e juros (Selic)</p>
-
-  <div class="capa-meta-box">
-    <div class="meta-item">
-      <span class="meta-label">DISCIPLINA</span>
-      <span class="meta-value">ECOX14 · Engenharia de Dados</span>
-    </div>
-    <div class="meta-divider"></div>
-    <div class="meta-item">
-      <span class="meta-label">ARQUITETURA</span>
-      <span class="meta-value">Pipeline Medalhão (Bronze ➔ Prata ➔ Ouro)</span>
-    </div>
-    <div class="meta-divider"></div>
-    <div class="meta-item">
-      <span class="meta-label">FOCO ATUAL</span>
-      <span class="meta-value">Data Profiling & Camada Prata</span>
-    </div>
-  </div>
-
-  <div class="capa-tags">
-    <span class="tag-pill">#DataEngineering</span>
-    <span class="tag-pill">#DataProfiling</span>
-    <span class="tag-pill">#ApacheParquet</span>
-    <span class="tag-pill">#PythonPandas</span>
-  </div>
-</section>
-
-  <!-- 02_ideia_central.html -->
-<!-- 02_ideia_central.html -->
-<section>
-  <div class="slide-header">
-    <span class="slide-tag">CONCEITO & ESCOPO</span>
-    <h2>A Pergunta Norteadora</h2>
-  </div>
-
-  <div class="pergunta-box">
-    <p class="pergunta-texto">
-      "Como a adoção em massa do <b>Pix</b> impactou os volumes transacionais no Brasil e qual é a correlação dessa dinâmica com a <b>inflação (IPCA)</b> e a <b>taxa básica de juros (Selic)</b>?"
-    </p>
-  </div>
-
-  <div class="cols" style="margin-top: 1.2em;">
-    <div class="card card-clean card-pix">
-      <div class="card-icon-title">
-        <span class="badge-mini pix">EIXO 1</span>
-        <h4>Dinâmica dos Meios de Pagamento</h4>
-      </div>
-      <ul class="clean-list">
-        <li><b>Adoção e Volume:</b> Evolução exponencial de transações (PF e PJ).</li>
-        <li><b>Perfil Demográfico:</b> Comportamento por faixa etária e tipo de iniciação.</li>
-        <li><b>Segurança & Fraudes:</b> Ocorrências, bloqueios e eficácia do MED.</li>
-      </ul>
-    </div>
-
-    <div class="card card-clean card-macro">
-      <div class="card-icon-title">
-        <span class="badge-mini bcb">EIXO 2</span>
-        <h4>Variáveis Macroeconômicas</h4>
-      </div>
-      <ul class="clean-list">
-        <li><b>Custo de Oportunidade:</b> Taxa Selic (Over e Meta Anualizada).</li>
-        <li><b>Poder de Compra:</b> Série histórica mensal do IPCA e acumulado 12m.</li>
-        <li><b>Hipótese:</b> O Pix atuou como redutor do "Custo Brasil" em ciclos de alta de juros.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-  <!-- 03_arquitetura.html -->
-<!-- 03_arquitetura.html -->
-<section>
-  <div class="slide-header">
-    <span class="slide-tag">ARQUITETURA DE DADOS</span>
-    <h2>Pipeline Medalhão: Resiliência e Linhagem</h2>
-  </div>
-
-  <div class="medalhao-wrapper">
-    <!-- Bloco Fontes -->
-    <div class="medalhao-col">
-      <div class="medalhao-box box-fontes">
-        <div class="box-badge">FONTES EXTERNAS</div>
-        <div class="box-title">APIs do Banco Central</div>
-        <div class="box-tech">OData Olinda · SGS · Dados Abertos</div>
-        <div class="box-desc">Dados transacionais Pix, fraudes e séries econômicas</div>
-      </div>
-    </div>
-
-    <div class="medalhao-arrow">
-      <span class="arrow-label">Python Requests<br>Checkpoint + Retry</span>
-      <span class="arrow-sym">➔</span>
-    </div>
-
-    <!-- Bloco Bronze -->
-    <div class="medalhao-col">
-      <div class="medalhao-box box-bronze">
-        <div class="box-badge bronze">CAMADA BRONZE</div>
-        <div class="box-title">Estoque Bruto (Raw)</div>
-        <div class="box-tech">CSV + proveniencia.json</div>
-        <div class="box-desc">Fidelidade total à fonte, rastreabilidade e metadados de ingestão</div>
-      </div>
-    </div>
-
-    <div class="medalhao-arrow">
-      <span class="arrow-label">Pandas ETL<br>Tipagem & Limpeza</span>
-      <span class="arrow-sym">➔</span>
-    </div>
-
-    <!-- Bloco Prata -->
-    <div class="medalhao-col">
-      <div class="medalhao-box box-prata">
-        <div class="box-badge prata">CAMADA PRATA</div>
-        <div class="box-title">Dados Higienizados</div>
-        <div class="box-tech">pix_limpo/ & macro_limpo/</div>
-        <div class="box-desc">Apache Parquet + CSV: transações, fraudes MED, taxa Selic e operações de mercado</div>
-      </div>
-    </div>
-
-    <div class="medalhao-arrow">
-      <span class="arrow-label">Agregação Temporal<br>Cálculo de Métricas</span>
-      <span class="arrow-sym">➔</span>
-    </div>
-
-    <!-- Bloco Ouro -->
-    <div class="medalhao-col">
-      <div class="medalhao-box box-ouro">
-        <div class="box-badge ouro">CAMADA OURO</div>
-        <div class="box-title">Data Marts Analíticos</div>
-        <div class="box-tech">Tabelas Fato / Star Schema</div>
-        <div class="box-desc">Pix agregado cruzado com IPCA e Selic para BI e inferência</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="medalhao-footer-note">
-    <span class="badge-mini r-lang">R ANALYTICS</span>
-    <span>A Camada Prata alimenta diretamente scripts exploratórios em R para validação de hipóteses e gráficos de dispersão.</span>
-  </div>
-</section>
-
-  <!-- 04_problemas_bronze.html -->
-<!-- 04_problemas_bronze.html -->
-<section>
-  <div class="slide-header">
-    <span class="slide-tag">DATA PROFILING</span>
-    <h2>Diagnóstico da Bronze: O Que Estava Incorreto?</h2>
-  </div>
-
-  <div class="cols">
-    <!-- Coluna de Problemas Estruturais -->
-    <div class="card card-clean card-danger-border">
-      <h4 style="color: #b91c1c; margin-bottom: .4em;">Erros Identificados nos Dados Brutos</h4>
-      <div class="problem-item">
-        <span class="problem-num">1</span>
-        <div>
-          <b>Campos Financeiros como Texto (String):</b>
-          <p>Valores monetários vieram no formato brasileiro com vírgula e ponto (<code>"9552,71"</code>). Impossibilitava qualquer agregação, soma ou cálculo de média.</p>
-        </div>
-      </div>
-      <div class="problem-item">
-        <span class="problem-num">2</span>
-        <div>
-          <b>Chave Temporal sem Tipo Data:</b>
-          <p>Campo <code>AnoMes</code> importado como inteiro (<code>202011</code>), impedindo indexação temporal contínua e filtros de calendário.</p>
-        </div>
-      </div>
-      <div class="problem-item">
-        <span class="problem-num">3</span>
-        <div>
-          <b>Heterogeneidade de Nomenclatura:</b>
-          <p>Mistura de padrões (ex: <code>VALOR</code>, <code>QtdePixcontestados</code> e <code>PAG_PFPJ</code>) sem convenção analítica.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Coluna Nota Técnica: Staircase Duplication -->
-    <div class="card card-clean card-tech-border">
-      <div class="tech-tag-row">
-        <span class="badge-mini warn">CASE DE ENGENHARIA</span>
-        <span class="badge-mini success">BYPASS IMPLEMENTADO</span>
-      </div>
-      <h4 style="color: #003366; margin: .3em 0;">Descoberta da Staircase Duplication</h4>
-      <p style="font-size: .7em; color: #475569; line-height: 1.4;">
-        O parâmetro <code>Database</code> da API Olinda (Bacen) não filtrava o mês individual, mas retornava todo o histórico subsequente acumulado:
-      </p>
-
-      <div class="staircase-metrics">
-        <div class="staircase-box red">
-          <div class="staircase-val" data-m="staircase.mb_total">2.799 MB</div>
-          <div class="staircase-lbl">70 arquivos particionados (redundância)</div>
-        </div>
-        <div class="staircase-box-arrow">➔</div>
-        <div class="staircase-box green">
-          <div class="staircase-val" data-m="staircase.mb_usado">68.7 MB</div>
-          <div class="staircase-lbl">Partição única 202011 (histórico completo)</div>
-        </div>
-      </div>
-
-      <p class="mini" style="margin-top: .6em; color: #047857; font-weight: 600;">
-        ✓ Refatoração: O script da Prata lê diretamente o arquivo consolidado, eliminando 97.5% de I/O em disco.
-      </p>
-    </div>
-  </div>
-</section>
-
-  <!-- 05_tabela_depara.html -->
-<!-- 05_tabela_depara.html -->
-<section>
-  <div class="slide-header">
-    <span class="slide-tag">TRANSFORMAÇÃO DE DADOS</span>
-    <h2>Matriz De / Para: Higienização da Bronze para a Prata</h2>
-    <p class="slide-subdesc">Mapeamento dos dados sujos originais, funções responsáveis pelo tratamento e o resultado tipado na Camada Prata.</p>
-  </div>
-
-  <table class="tabela-depara">
-    <thead>
-      <tr>
-        <th>Coluna Original</th>
-        <th>Dado Bruto (Bronze)</th>
-        <th>Problema</th>
-        <th>Função Aplicada</th>
-        <th>O Que a Função Faz</th>
-        <th>Dado Limpo (Prata)</th>
-        <th>Tipo</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code>VALOR</code></td>
-        <td><span class="dado-sujo">"7272767,37"</span></td>
-        <td>Texto c/ vírgula</td>
-        <td><code>tratar_valor_financeiro()</code></td>
-        <td>Converte vírgula para ponto e tipa em Float</td>
-        <td><span class="dado-limpo">7272767.37</span></td>
-        <td><span class="badge-type float">float64</span></td>
-      </tr>
-      <tr>
-        <td><code>AnoMes</code></td>
-        <td><span class="dado-sujo">202011</span></td>
-        <td>Inteiro YYYYMM</td>
-        <td><code>pd.to_datetime()</code></td>
-        <td>Indexa como primeiro dia do mês (YYYY-MM-01)</td>
-        <td><span class="dado-limpo">2020-11-01</span></td>
-        <td><span class="badge-type date">date</span></td>
-      </tr>
-      <tr>
-        <td><code>ValorPixcontestadosaceitos</code></td>
-        <td><span class="dado-sujo">"698566565,98"</span></td>
-        <td>Texto c/ milhar e vírgula</td>
-        <td><code>limpar_estatisticas_fraudes()</code></td>
-        <td>Elimina pontos de milhar e converte decimal</td>
-        <td><span class="dado-limpo">698566565.98</span></td>
-        <td><span class="badge-type float">float64</span></td>
-      </tr>
-      <tr>
-        <td><code>QtdePixcontestados</code></td>
-        <td><span class="dado-sujo">1328141 (Pascal)</span></td>
-        <td>Nome fora do padrão</td>
-        <td><code>renames</code> (Semântico)</td>
-        <td>Padroniza com prefixo semântico <code>qtd_*</code></td>
-        <td><span class="dado-limpo">qtd_pix_contestados</span></td>
-        <td><span class="badge-type int">int64</span></td>
-      </tr>
-      <tr>
-        <td><code>VL_PagadorPF</code></td>
-        <td><span class="dado-sujo">Nome em Upper/Camel</span></td>
-        <td>Nomes heterogêneos</td>
-        <td><code>to_snake_case()</code></td>
-        <td>Regex para separação por underscore minúsculo</td>
-        <td><span class="dado-limpo">vl_pagador_pf</span></td>
-        <td><span class="badge-type str">snake</span></td>
-      </tr>
-      <tr>
-        <td><code>valor (SGS 432)</code></td>
-        <td><span class="dado-sujo">"2,00"</span></td>
-        <td>Vírgula e sep <code>;</code></td>
-        <td><code>limpeza_taxa_selic()</code></td>
-        <td>Converte vírgula, anualiza base 252 e agrega mês</td>
-        <td><span class="dado-limpo">2.00</span></td>
-        <td><span class="badge-type float">float64</span></td>
-      </tr>
-      <tr>
-        <td><code>Mes (Olinda Selic)</code></td>
-        <td><span class="dado-sujo">"2020-01"</span></td>
-        <td>82 CSVs em string</td>
-        <td><code>limpeza_operacoes_selic()</code></td>
-        <td>Concatena arquivos e cria índice temporal canônico</td>
-        <td><span class="dado-limpo">2020-01-01</span></td>
-        <td><span class="badge-type date">date</span></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="depara-footer">
-    <span class="footer-highlight">Resumo Técnico:</span> 
-    Eliminação de 100% dos tipos <code>object</code> em colunas quantitativas, viabilizando agregação matemática e partição colunar.
-  </div>
-</section>
-
-  <!-- 06_metricas_parquet.html -->
-<!-- 06_metricas_parquet.html -->
-<section id="antes-depois">
-  <div class="slide-header">
-    <span class="slide-tag">MÉTRICAS DO PIPELINE</span>
-    <h2>Antes × Depois em Números & Compressão Parquet</h2>
-  </div>
-
-  <div class="cols">
-    <div class="chart-container-card">
-      <div class="chart-box" style="height: 230px;"><canvas id="c-fraudes"></canvas></div>
-      <p class="mini-chart-desc"><span data-m="datasets.fraudes.prata.linhas">52</span> meses · <span data-m="datasets.fraudes.bronze.texto">11</span> colunas texto ➔ <span data-m="datasets.fraudes.prata.texto">0</span> na Prata</p>
-    </div>
-
-    <div class="chart-container-card">
-      <div class="chart-box" style="height: 230px;"><canvas id="c-trans"></canvas></div>
-      <p class="mini-chart-desc"><span data-m="datasets.transacoes.prata.linhas">741.383</span> linhas processadas · Parquet colunar otimizado</p>
-    </div>
-  </div>
-
-  <div class="kpi-row">
-    <div class="kpi-card light-kpi">
-      <div class="val" style="color: #003366;">78.2 MB ➔ 11.2 MB</div>
-      <div class="lbl">Armazenamento: Conversão CSV para Apache Parquet (Snappy)</div>
-    </div>
-    <div class="kpi-card light-kpi">
-      <div class="val" style="color: #008779;">-85.7%</div>
-      <div class="lbl">Redução de I/O em disco para queries colunares analíticas</div>
-    </div>
-    <div class="kpi-card light-kpi">
-      <div class="val" style="color: #059669;">100%</div>
-      <div class="lbl">Valores monetários e taxas convertidos com precisão float64</div>
-    </div>
-  </div>
-</section>
-
-  <!-- 07_resultados_nativos.html -->
-<!-- 07_resultados_nativos.html -->
-<section>
-  <div class="slide-header">
-    <span class="slide-tag">RESULTADOS ANALÍTICOS</span>
-    <h2>Insights da Prata: Renderização Nativa (SVG & CSS)</h2>
-    <p class="slide-subdesc">Gráficos gerados diretamente no navegador, eliminando artefatos de imagem e mantendo escala vetorial nítida.</p>
-  </div>
-
-  <div class="cols">
-    <!-- Coluna 1: Curva Pix em SVG Nativo (Tema Claro) -->
-    <div class="card card-clean svg-card-clean">
-      <div class="card-icon-title">
-        <span class="badge-mini pix">SÉRIE TEMPORAL</span>
-        <h4>Evolução do Volume Pix (Mensal)</h4>
-      </div>
-      <p class="mini-chart-desc">Crescimento de <b>29.5M</b> (nov/20) para <b>7.37B</b> transações (ago/26)</p>
-
-      <svg viewBox="0 0 500 250" preserveAspectRatio="none" class="svg-curva-pix">
-        <!-- Grid lines claras -->
-        <line x1="30" y1="30" x2="470" y2="30" class="chart-grid-light" />
-        <line x1="30" y1="80" x2="470" y2="80" class="chart-grid-light" />
-        <line x1="30" y1="130" x2="470" y2="130" class="chart-grid-light" />
-        <line x1="30" y1="180" x2="470" y2="180" class="chart-grid-light" />
-        <line x1="30" y1="230" x2="470" y2="230" class="chart-grid-light" />
-
-        <!-- Labels Eixo Y -->
-        <text x="5" y="34" class="chart-axis-light">7.5B</text>
-        <text x="5" y="134" class="chart-axis-light">3.8B</text>
-        <text x="12" y="233" class="chart-axis-light">0</text>
-
-        <!-- Área preenchida com transparência suave -->
-        <polygon points="30.0,229.2 30.0,229.2 36.4,226.8 42.8,225.6 49.1,224.1 55.5,221.5 61.9,219.4 68.3,216.0 74.6,213.8 81.0,210.7 87.4,208.9 93.8,207.5 100.1,204.7 106.5,203.2 112.9,198.3 119.3,201.7 125.7,199.9 132.0,194.8 138.4,193.3 144.8,189.3 151.2,187.8 157.5,184.8 163.9,181.9 170.3,180.3 176.7,177.0 183.0,175.6 189.4,167.3 195.8,173.6 202.2,174.3 208.6,164.2 214.9,164.9 221.3,158.7 227.7,156.1 234.1,150.4 240.4,145.2 246.8,143.4 253.2,138.1 259.6,134.2 265.9,121.1 272.3,130.4 278.7,130.5 285.1,118.2 291.4,117.7 297.8,110.5 304.2,109.6 310.6,106.2 317.0,100.5 323.3,103.4 329.7,98.2 336.1,96.3 342.5,82.4 348.8,99.2 355.2,101.1 361.6,86.1 368.0,85.3 374.3,76.7 380.7,80.1 387.1,74.9 393.5,68.7 399.9,71.4 406.2,63.2 412.6,63.0 419.0,46.5 425.4,65.5 431.7,75.2 438.1,55.7 444.5,57.3 450.9,45.9 457.2,49.5 463.6,42.8 470.0,39.5 470.0,230 30.0,230" fill="rgba(0, 135, 121, 0.12)" />
-
-        <!-- Linha do gráfico em verde escuro corporativo -->
-        <polyline fill="none" stroke="#008779" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"
-          points="30.0,229.2 36.4,226.8 42.8,225.6 49.1,224.1 55.5,221.5 61.9,219.4 68.3,216.0 74.6,213.8 81.0,210.7 87.4,208.9 93.8,207.5 100.1,204.7 106.5,203.2 112.9,198.3 119.3,201.7 125.7,199.9 132.0,194.8 138.4,193.3 144.8,189.3 151.2,187.8 157.5,184.8 163.9,181.9 170.3,180.3 176.7,177.0 183.0,175.6 189.4,167.3 195.8,173.6 202.2,174.3 208.6,164.2 214.9,164.9 221.3,158.7 227.7,156.1 234.1,150.4 240.4,145.2 246.8,143.4 253.2,138.1 259.6,134.2 265.9,121.1 272.3,130.4 278.7,130.5 285.1,118.2 291.4,117.7 297.8,110.5 304.2,109.6 310.6,106.2 317.0,100.5 323.3,103.4 329.7,98.2 336.1,96.3 342.5,82.4 348.8,99.2 355.2,101.1 361.6,86.1 368.0,85.3 374.3,76.7 380.7,80.1 387.1,74.9 393.5,68.7 399.9,71.4 406.2,63.2 412.6,63.0 419.0,46.5 425.4,65.5 431.7,75.2 438.1,55.7 444.5,57.3 450.9,45.9 457.2,49.5 463.6,42.8 470.0,39.5" />
-
-        <!-- Labels Eixo X -->
-        <text x="30" y="247" class="chart-axis-light">nov/2020</text>
-        <text x="175" y="247" class="chart-axis-light">2022</text>
-        <text x="320" y="247" class="chart-axis-light">2024</text>
-        <text x="430" y="247" class="chart-axis-light">ago/2026</text>
-      </svg>
-    </div>
-
-    <!-- Coluna 2: Funil MED em CSS Nativo (Tema Claro) -->
-    <div class="card card-clean">
-      <div class="card-icon-title">
-        <span class="badge-mini warn">SEGURANÇA</span>
-        <h4>Funil do MED: Dificuldade de Ressarcimento</h4>
-      </div>
-      <p class="mini-chart-desc">De 53.1M de contestações, minoria resulta em devolução financeira</p>
-
-      <div class="funil-container-light">
-        <div class="funil-step-light s1">
-          <div class="f-num">53.109.835</div>
-          <div class="f-lbl">1. Contestações Registradas (100%)</div>
-        </div>
-        <div class="funil-step-light s2">
-          <div class="f-num">14.128.499</div>
-          <div class="f-lbl">2. Aceitas / Fraude Confirmada (26.6%)</div>
-        </div>
-        <div class="funil-step-light s3">
-          <div class="f-num">4.693.451</div>
-          <div class="f-lbl">3. Devolvidas pelo MED (8.8%)</div>
-        </div>
-      </div>
-
-      <div class="funil-note-light">
-        <b>33.2%</b> das fraudes confirmadas conseguem devolução.<br>
-        <span style="color: #b91c1c;">Gargalo estrutural:</span> Esvaziamento rápido de saldo em contas laranjas.
-      </div>
-    </div>
-  </div>
-</section>
-
-  <!-- 08_macro_selic.html -->
-<!-- 08_macro_selic.html -->
-<section>
-  <div class="slide-header">
-    <span class="slide-tag">RESULTADOS MACROECONÔMICOS</span>
-    <h2>Resultados da Prata: Taxa Selic & Operações de Mercado</h2>
-    <p class="slide-subdesc">Série histórica de juros do SGS e consolidação do mercado aberto da API Olinda (83 meses analisados).</p>
-  </div>
-
-  <div class="cols">
-    <!-- Coluna 1: Curva da Taxa Selic em SVG Nativo -->
-    <div class="card card-clean svg-card-clean">
-      <div class="card-icon-title">
-        <span class="badge-mini bcb">SGS SÉRIE 432 / 11</span>
-        <h4>Ciclo da Taxa Selic (% a.a.)</h4>
-      </div>
-      <p class="mini-chart-desc">Do piso histórico de <b>2,00%</b> (nov/20) ao ciclo de alta até <b>14,25%</b> (2026)</p>
-
-      <svg viewBox="0 0 500 250" preserveAspectRatio="none" class="svg-curva-pix">
-        <!-- Grid lines claras -->
-        <line x1="30" y1="30" x2="470" y2="30" class="chart-grid-light" />
-        <line x1="30" y1="80" x2="470" y2="80" class="chart-grid-light" />
-        <line x1="30" y1="130" x2="470" y2="130" class="chart-grid-light" />
-        <line x1="30" y1="180" x2="470" y2="180" class="chart-grid-light" />
-        <line x1="30" y1="230" x2="470" y2="230" class="chart-grid-light" />
-
-        <!-- Labels Eixo Y -->
-        <text x="5" y="34" class="chart-axis-light">15%</text>
-        <text x="5" y="100" class="chart-axis-light">10%</text>
-        <text x="10" y="166" class="chart-axis-light">5%</text>
-        <text x="12" y="233" class="chart-axis-light">0</text>
-
-        <!-- Área preenchida com transparência suave azul BCB -->
-        <polygon points="30.0,177.8 30.0,177.8 35.4,180.7 40.7,186.5 46.1,186.5 51.5,195.2 56.8,203.9 62.2,203.9 67.6,206.8 72.9,206.8 78.3,206.8 83.7,206.8 89.0,206.8 94.4,206.8 99.8,206.8 105.1,198.1 110.5,198.1 115.9,189.4 121.2,180.7 126.6,180.7 132.0,169.1 137.3,157.5 142.7,140.1 148.0,140.1 153.4,122.8 158.8,122.8 164.1,105.4 169.5,93.8 174.9,93.8 180.2,82.2 185.6,76.4 191.0,76.4 196.3,70.6 201.7,70.6 207.1,70.6 212.4,70.6 217.8,70.6 223.2,70.6 228.5,70.6 233.9,70.6 239.3,70.6 244.6,70.6 250.0,70.6 255.4,70.6 260.7,76.4 266.1,82.2 271.5,82.2 276.8,88.0 282.2,93.8 287.6,93.8 292.9,99.6 298.3,105.4 303.7,105.4 309.0,108.3 314.4,108.3 319.8,108.3 325.1,108.3 330.5,105.4 335.9,105.4 341.2,99.6 346.6,88.0 352.0,76.4 357.3,76.4 362.7,64.8 368.0,64.8 373.4,59.0 378.8,56.1 384.1,56.1 389.5,56.1 394.9,56.1 400.2,56.1 405.6,56.1 411.0,56.1 416.3,56.1 421.7,56.1 427.1,59.0 432.4,61.9 437.8,61.9 443.2,64.8 448.5,64.8 453.9,67.7 459.3,70.6 464.6,70.6 470.0,70.6 470.0,230 30.0,230" fill="rgba(0, 51, 102, 0.12)" />
-
-        <!-- Linha da curva em azul Banco Central -->
-        <polyline fill="none" stroke="#003366" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"
-          points="30.0,177.8 35.4,180.7 40.7,186.5 46.1,186.5 51.5,195.2 56.8,203.9 62.2,203.9 67.6,206.8 72.9,206.8 78.3,206.8 83.7,206.8 89.0,206.8 94.4,206.8 99.8,206.8 105.1,198.1 110.5,198.1 115.9,189.4 121.2,180.7 126.6,180.7 132.0,169.1 137.3,157.5 142.7,140.1 148.0,140.1 153.4,122.8 158.8,122.8 164.1,105.4 169.5,93.8 174.9,93.8 180.2,82.2 185.6,76.4 191.0,76.4 196.3,70.6 201.7,70.6 207.1,70.6 212.4,70.6 217.8,70.6 223.2,70.6 228.5,70.6 233.9,70.6 239.3,70.6 244.6,70.6 250.0,70.6 255.4,70.6 260.7,76.4 266.1,82.2 271.5,82.2 276.8,88.0 282.2,93.8 287.6,93.8 292.9,99.6 298.3,105.4 303.7,105.4 309.0,108.3 314.4,108.3 319.8,108.3 325.1,108.3 330.5,105.4 335.9,105.4 341.2,99.6 346.6,88.0 352.0,76.4 357.3,76.4 362.7,64.8 368.0,64.8 373.4,59.0 378.8,56.1 384.1,56.1 389.5,56.1 394.9,56.1 400.2,56.1 405.6,56.1 411.0,56.1 416.3,56.1 421.7,56.1 427.1,59.0 432.4,61.9 437.8,61.9 443.2,64.8 448.5,64.8 453.9,67.7 459.3,70.6 464.6,70.6 470.0,70.6" />
-
-        <!-- Labels Eixo X -->
-        <text x="30" y="247" class="chart-axis-light">2020</text>
-        <text x="175" y="247" class="chart-axis-light">2022</text>
-        <text x="320" y="247" class="chart-axis-light">2024</text>
-        <text x="430" y="247" class="chart-axis-light">2026</text>
-      </svg>
-    </div>
-
-    <!-- Coluna 2: Mercado de Títulos Públicos (Operações no Selic) -->
-    <div class="card card-clean">
-      <div class="card-icon-title">
-        <span class="badge-mini warn">MERCADO ABERTO</span>
-        <h4>Operações no Selic (API Olinda)</h4>
-      </div>
-      <p class="mini-chart-desc">82 arquivos mensais consolidados ➔ <b>2.978 registros categorizados</b></p>
-
-      <div class="macro-kpi-grid">
-        <div class="macro-kpi-box">
-          <div class="m-val" style="color: #003366;">R$ 4,72 Quatrilhões</div>
-          <div class="m-lbl">Recompra/Revenda e Compromissadas (Giro Interbancário)</div>
-        </div>
-        <div class="macro-kpi-box">
-          <div class="m-val" style="color: #d97706;">R$ 495,3 Trilhões</div>
-          <div class="m-lbl">Redesconto e Assistência de Liquidez do Bacen</div>
-        </div>
-        <div class="macro-kpi-box">
-          <div class="m-val" style="color: #059669;">R$ 163,9 Trilhões</div>
-          <div class="m-lbl">Compra/Venda Definitiva de Títulos Públicos Federais</div>
-        </div>
-      </div>
-
-      <div class="macro-footer-note">
-        <b>Lastro de Liquidez:</b> As operações compromissadas formam a base sob a qual todo o sistema bancário liquida operações financeiras no Brasil.
-      </div>
-    </div>
-  </div>
-</section>
-
-  <!-- 09_roadmap_ouro.html -->
-<!-- 08_roadmap_ouro.html -->
-<section>
-  <div class="slide-header">
-    <span class="slide-tag">ROADMAP & MODELAGEM</span>
-    <h2>Camada Ouro: O Futuro da Análise Integrada</h2>
-    <p class="slide-subdesc">Esquema da tabela consolidada que unificará os dados do Pix com os agregados econômicos do Banco Central.</p>
-  </div>
-
-  <div class="schema-grid-light">
-    <!-- Prata Pix -->
-    <div class="schema-card-light">
-      <div class="schema-card-head">prata_transacoes_pix</div>
-      <div class="schema-card-body">
-        <div class="schema-row"><span class="col-pk">ano_mes_dt</span><span class="col-type">date</span></div>
-        <div class="schema-row"><span>pag_pfpj</span><span class="col-type">str</span></div>
-        <div class="schema-row"><span>rec_pfpj</span><span class="col-type">str</span></div>
-        <div class="schema-row"><span>valor</span><span class="col-type">float64</span></div>
-        <div class="schema-row"><span>quantidade</span><span class="col-type">int64</span></div>
-      </div>
-    </div>
-
-    <!-- Ouro Fato Agregada -->
-    <div class="schema-card-light ouro-highlight">
-      <div class="schema-card-head ouro-head">★ ouro_pix_macro_mensal</div>
-      <div class="schema-card-body">
-        <div class="schema-row"><span class="col-pk">ano_mes (PK)</span><span class="col-type">int64</span></div>
-        <div class="schema-row"><span>qtd_transacoes_total</span><span class="col-type">int64</span></div>
-        <div class="schema-row"><span>vl_transacoes_total</span><span class="col-type">float64</span></div>
-        <div class="schema-row"><span>ticket_medio_pix</span><span class="col-type">float64</span></div>
-        <div class="schema-row"><span>pct_transacoes_pj</span><span class="col-type">float64</span></div>
-        <div class="schema-row macro-accent"><span>selic_meta_anual</span><span class="col-type">float64</span></div>
-        <div class="schema-row macro-accent"><span>ipca_acumulado_12m</span><span class="col-type">float64</span></div>
-        <div class="schema-row macro-accent"><span>taxa_fraude_100mil</span><span class="col-type">float64</span></div>
-      </div>
-    </div>
-
-    <!-- Prata Macro Real -->
-    <div class="schema-card-light">
-      <div class="schema-card-head">taxa_selic_mensal</div>
-      <div class="schema-card-body">
-        <div class="schema-row"><span class="col-pk">ano_mes_dt</span><span class="col-type">date</span></div>
-        <div class="schema-row"><span>selic_meta_fim_mes</span><span class="col-type">float64</span></div>
-        <div class="schema-row"><span>selic_realizada_media</span><span class="col-type">float64</span></div>
-        <div class="schema-row"><span>dias_uteis</span><span class="col-type">int64</span></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="roadmap-checklist">
-    <div class="check-item"><span class="check-badge ok">✓ Concluído</span> Prata Pix (Transações/Fraudes) + Prata Macro (Selic/Operações)</div>
-    <div class="check-item"><span class="check-badge next">➔ Próximo</span> Unificação na Camada Ouro (One Big Table / Star Schema)</div>
-    <div class="check-item"><span class="check-badge goal">★ Meta</span> Teste de hipótese: Inelasticidade da Adoção vs Custo de Juros</div>
-  </div>
-</section>
-
-</div></div>
+</div>
 
 <script src="vendor/reveal.js/dist/reveal.js"></script>
 <script src="vendor/reveal.js/plugin/notes/notes.js"></script>
 <script src="vendor/chart.umd.min.js"></script>
 <script src="data/metricas.js"></script>
-<script>
-  Reveal.initialize({
-    hash: true,
-    slideNumber: 'c/t',
-    width: 1280,
-    height: 720,
-    margin: 0.05,
-    transition: 'fade',
-    plugins: [RevealNotes]
-  });
-</script>
 <script src="js/graficos.js"></script>
+<script>
+  (async function () {
+    const SLIDES = [
+      'slides/01_capa.html',
+      'slides/02_ideia_central.html',
+      'slides/03_arquitetura.html',
+      'slides/04_problemas_bronze.html',
+      'slides/05_tabela_depara.html',
+      'slides/06_metricas_parquet.html',
+      'slides/07_resultados_nativos.html',
+      'slides/08_macro_selic.html',
+      'slides/09_roadmap_ouro.html'
+    ];
+
+    const container = document.getElementById('slides-container');
+
+    try {
+      const responses = await Promise.all(SLIDES.map(url => fetch(url)));
+      const texts = await Promise.all(responses.map(res => {
+        if (!res.ok) throw new Error(`Falha ao carregar ${res.url} (status ${res.status})`);
+        return res.text();
+      }));
+
+      texts.forEach(html => container.insertAdjacentHTML('beforeend', html));
+
+      await Reveal.initialize({
+        hash: true,
+        slideNumber: 'c/t',
+        width: 1280,
+        height: 720,
+        margin: 0.05,
+        transition: 'fade',
+        plugins: [RevealNotes]
+      });
+
+      if (window.iniciarGraficos) {
+        window.iniciarGraficos();
+      }
+    } catch (err) {
+      console.error(err);
+      container.innerHTML = `
+        <section style="text-align: left; padding: 2em;">
+          <h2 style="color: #b91c1c;">Aviso de Carregamento</h2>
+          <p style="font-size: 0.8em; color: #334155;">
+            Os slides são modulares e carregados dinamicamente a partir da pasta <code>slides/</code>.
+          </p>
+          <div style="background: #fee2e2; border-left: 4px solid #b91c1c; padding: 1em; border-radius: .4em; font-size: 0.7em; color: #991b1b; margin-top: 1em;">
+            <b>Detectado bloqueio de segurança local (CORS):</b><br>
+            Se você deu duplo clique no arquivo <code>index.html</code> (protocolo <code>file://</code>), o navegador impede o carregamento de arquivos locais por segurança.<br><br>
+            <b>Como resolver:</b><br>
+            Abra a pasta no VS Code e clique em <b>"Go Live" (Live Server)</b>, ou execute no terminal:<br>
+            <code>py -m http.server 8000</code> e acesse <code>http://localhost:8000/Projetofinal/apresentacao/</code>.
+          </div>
+        </section>
+      `;
+      Reveal.initialize({
+        hash: true,
+        width: 1280,
+        height: 720
+      });
+    }
+  })();
+</script>
 </body>
 </html>

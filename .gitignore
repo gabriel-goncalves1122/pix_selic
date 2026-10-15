@@ -21,6 +21,9 @@ __pycache__/
 .pytest_cache/
 .coverage
 htmlcov/
+foto_*.png
+test_*.png
+.playwright/
 
 # Segredos, Chaves de API e Credenciais (NUNCA versionar)
 .env

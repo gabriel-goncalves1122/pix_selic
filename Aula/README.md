@@ -20,7 +20,7 @@ Este repositório contém o ambiente e os scripts construídos durante as aulas 
    ```
 2. Instale os requisitos (caso necessário):
    ```bash
-   pip install -r requeirements.txt
+   pip install -r requirements.txt
    ```
 3. Execute os pipelines de ingestão de dados:
    ```bash

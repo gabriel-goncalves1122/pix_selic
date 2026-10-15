@@ -1,7 +1,11 @@
 import json
 import csv
 import os
+import sys
 from pathlib import Path
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 
 # ==============================================================================
 # Validador Automatizado da Camada Bronze — Schema Registry

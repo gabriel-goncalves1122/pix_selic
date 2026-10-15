@@ -1,63 +1,73 @@
 <!-- 04_problemas_bronze.html -->
 <section>
   <div class="slide-header">
-    <span class="slide-tag">DATA PROFILING</span>
-    <h2>Diagnóstico da Bronze: O Que Estava Incorreto?</h2>
+    <span class="slide-tag">DATA PROFILING & ENGENHARIA DE DADOS</span>
+    <h2>Diagnóstico da Bronze: Qualidade dos Dados & Case Pix</h2>
+    <p class="slide-subdesc">Auditoria dos dados brutos do Pix e Macroeconômicos (SGS & Olinda) do Banco Central do Brasil.</p>
   </div>
 
   <div class="cols">
-    <!-- Coluna de Problemas Estruturais -->
+    <!-- Coluna de Problemas Estruturais (Pix & Macro) -->
     <div class="card card-clean card-danger-border">
-      <h4 style="color: #b91c1c; margin-bottom: .4em;">Erros Identificados nos Dados Brutos</h4>
+      <h4 style="color: #b91c1c; margin-bottom: .5em;">Erros Estruturais Identificados</h4>
+      
       <div class="problem-item">
         <span class="problem-num">1</span>
         <div>
-          <b>Campos Financeiros como Texto (String):</b>
-          <p>Valores monetários vieram no formato brasileiro com vírgula e ponto (<code>"9552,71"</code>). Impossibilitava qualquer agregação, soma ou cálculo de média.</p>
+          <b>Numéricos Armazenados como Texto:</b>
+          <p>Moeda e taxas no padrão string brasileiro (ex: <code>"9552,71"</code> e <code>"2,00"</code>), inviabilizando operações matemáticas.</p>
         </div>
       </div>
+
       <div class="problem-item">
         <span class="problem-num">2</span>
         <div>
-          <b>Chave Temporal sem Tipo Data:</b>
-          <p>Campo <code>AnoMes</code> importado como inteiro (<code>202011</code>), impedindo indexação temporal contínua e filtros de calendário.</p>
+          <b>Chaves Temporais Sem Tipagem Nativa:</b>
+          <p>Pix importado como inteiro (<code>202011</code>), SGS como string (<code>"04/11/2020"</code>) e Selic como <code>"2020-01"</code>.</p>
         </div>
       </div>
+
       <div class="problem-item">
         <span class="problem-num">3</span>
         <div>
-          <b>Heterogeneidade de Nomenclatura:</b>
-          <p>Mistura de padrões (ex: <code>VALOR</code>, <code>QtdePixcontestados</code> e <code>PAG_PFPJ</code>) sem convenção analítica.</p>
+          <b>Formatos e Delimitadores Conflitantes:</b>
+          <p>Nomenclatura heterogênea (PascalCase/CamelCase) e conflito de separador: vírgula (<code>,</code>) na Olinda vs ponto-e-vírgula (<code>;</code>) no SGS.</p>
         </div>
+      </div>
+
+      <div class="macro-diag-note">
+        <b>Padrão Transversal:</b> Séries macroeconômicas compartilhavam os mesmos vícios de formatação dos dados do Pix.
       </div>
     </div>
 
-    <!-- Coluna Nota Técnica: Staircase Duplication -->
+    <!-- Coluna Nota Técnica: Aprendizado Real na Ingestão do Pix -->
     <div class="card card-clean card-tech-border">
       <div class="tech-tag-row">
-        <span class="badge-mini warn">CASE DE ENGENHARIA</span>
-        <span class="badge-mini success">BYPASS IMPLEMENTADO</span>
+        <span class="badge-mini warn" style="background: #ea580c; color: #fff;">CASE REAL: PREMISSA INCORRETA</span>
+        <span class="badge-mini success">OTIMIZAÇÃO</span>
       </div>
-      <h4 style="color: #003366; margin: .3em 0;">Descoberta da Staircase Duplication</h4>
-      <p style="font-size: .7em; color: #475569; line-height: 1.4;">
-        O parâmetro <code>Database</code> da API Olinda (Bacen) não filtrava o mês individual, mas retornava todo o histórico subsequente acumulado:
-      </p>
+      <h4 style="color: #003366; margin: .3em 0 .4em 0;">Case Ingestão Pix: Do Loop ao Dado Único</h4>
+      
+      <div class="case-bullets" style="font-size: .63em; line-height: 1.4; color: #334155;">
+        <p style="margin-bottom: .3em;"><b>• Expectativa:</b> Loop mensal com retries HTTP baixou 70 arquivos (2,8 GB).</p>
+        <p style="margin-bottom: .5em; color: #b91c1c;"><b>• Profiling:</b> API já acumulava todo o histórico desde 2020 no 1º CSV.</p>
+      </div>
 
       <div class="staircase-metrics">
         <div class="staircase-box red">
           <div class="staircase-val" data-m="staircase.mb_total">2.799 MB</div>
-          <div class="staircase-lbl">70 arquivos particionados (redundância)</div>
+          <div class="staircase-lbl">70 CSVs redundantes</div>
         </div>
         <div class="staircase-box-arrow">➔</div>
         <div class="staircase-box green">
           <div class="staircase-val" data-m="staircase.mb_usado">68.7 MB</div>
-          <div class="staircase-lbl">Partição única 202011 (histórico completo)</div>
+          <div class="staircase-lbl">1 CSV raiz continha tudo</div>
         </div>
       </div>
 
-      <p class="mini" style="margin-top: .6em; color: #047857; font-weight: 600;">
-        ✓ Refatoração: O script da Prata lê diretamente o arquivo consolidado, eliminando 97.5% de I/O em disco.
-      </p>
+      <div class="mini-impact-note" style="margin-top: .6em; font-size: .62em; color: #047857; font-weight: 600; line-height: 1.35;">
+        ✓ Otimização Local: -97,5% de I/O em disco. Evitou sobrecarga de RAM e CPU na máquina pessoal ao ler direto a safra consolidada.
+      </div>
     </div>
   </div>
 </section>
