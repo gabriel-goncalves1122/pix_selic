@@ -1,0 +1,102 @@
+{
+  "descricao": "Schema Registry da Camada Bronze — Contrato de colunas esperadas por tabela",
+  "versao": "1.0",
+  "atualizado_em": "2026-09-18",
+  "pix": {
+    "EstatisticasTransacoesPix": {
+      "colunas": [
+        "AnoMes", "PAG_PFPJ", "REC_PFPJ", "PAG_REGIAO", "REC_REGIAO",
+        "PAG_IDADE", "REC_IDADE", "FORMAINICIACAO", "NATUREZA",
+        "FINALIDADE", "VALOR", "QUANTIDADE"
+      ],
+      "qtd_colunas": 12,
+      "delimitador": ",",
+      "particionado": true,
+      "padrao_arquivo": "EstatisticasTransacoesPix_YYYYMM.csv"
+    },
+    "EstatisticasFraudesPix": {
+      "colunas": [
+        "AnoMes", "QtdePixcontestados", "Qtdecontestacoesaceitas",
+        "Qtdecontestacoesrejeitadas", "Qtdecontestacoesaceitasacada100mil",
+        "QtdeUsuarioscommarcacoesdefraude", "QtdeChavesPixcommarcacoesdefraude",
+        "ValorPixcontestadosaceitos", "QuantidadedevolvidaintegralmentepormeiodoMED",
+        "ValorPixdevolvidosintegralmente", "QuantidadedevolvidaparcialmentepormeiodoMED",
+        "ValorPixdevolvidosparcialmente", "ValorPixresidualnaodevolvido",
+        "Quantidadedenaodevolvidossaldoinsuficiente", "ValorPixnaodevolvidossaldoinsuficiente",
+        "Quantidadedenaodevolvidoscontaencerrada", "Valornaodevolvidoscontaencerrada",
+        "Quantidadedenaodevolvidosmotivosdiversos", "ValorPixnaodevolvidosmotivosdiversos",
+        "PercentualdeDevolucao", "QtdePixbloqueadoscautelarmenteeliberados",
+        "ValorPixbloqueadoscautelarmenteeliberados", "QtdePixbloqueadoscautelarmenteedevolvidos",
+        "ValorPixbloqueadoscautelarmenteedevolvidos"
+      ],
+      "qtd_colunas": 24,
+      "delimitador": ",",
+      "particionado": true,
+      "padrao_arquivo": "EstatisticasFraudesPix_YYYYMM.csv"
+    },
+    "PixUsuariosCadastradosDICT": {
+      "colunas": [
+        "DataGraficosPix", "qtdUsuariosPessoaFisica",
+        "qtdUsuariosPessoaJuridica", "qtdUsuariosCadastradosDICTTotal"
+      ],
+      "qtd_colunas": 4,
+      "delimitador": ",",
+      "particionado": false,
+      "padrao_arquivo": "PixUsuariosCadastradosDICT.csv"
+    },
+    "TransacoesPixPorMunicipio": {
+      "colunas": [
+        "AnoMes", "Municipio_Ibge", "Municipio", "Estado_Ibge", "Estado",
+        "Sigla_Regiao", "Regiao", "VL_PagadorPF", "QT_PagadorPF",
+        "VL_PagadorPJ", "QT_PagadorPJ", "VL_RecebedorPF", "QT_RecebedorPF",
+        "VL_RecebedorPJ", "QT_RecebedorPJ", "QT_PES_PagadorPF",
+        "QT_PES_PagadorPJ", "QT_PES_RecebedorPF", "QT_PES_RecebedorPJ"
+      ],
+      "qtd_colunas": 19,
+      "delimitador": ",",
+      "particionado": true,
+      "padrao_arquivo": "TransacoesPixPorMunicipio_YYYYMM.csv"
+    }
+  },
+  "macro": {
+    "ExpectativaMercadoMensais": {
+      "colunas": [
+        "Indicador", "Data", "DataReferencia", "Media", "Mediana",
+        "DesvioPadrao", "Minimo", "Maximo", "numeroRespondentes", "baseCalculo"
+      ],
+      "qtd_colunas": 10,
+      "delimitador": ",",
+      "particionado": false,
+      "padrao_arquivo": "ExpectativaMercadoMensais.csv"
+    },
+    "ExpectativasMercadoAnuais": {
+      "colunas": [
+        "Indicador", "IndicadorDetalhe", "Data", "DataReferencia",
+        "Media", "Mediana", "DesvioPadrao", "Minimo", "Maximo",
+        "numeroRespondentes", "baseCalculo"
+      ],
+      "qtd_colunas": 11,
+      "delimitador": ",",
+      "particionado": false,
+      "padrao_arquivo": "ExpectativasMercadoAnuais.csv"
+    },
+    "OperacoesEmUmMes": {
+      "colunas": [
+        "Mes", "Codigo", "Categoria", "QuantidadeAcumulada",
+        "ValorAcumulado", "QuantidadeMediaDiaria", "ValorMedioDiario"
+      ],
+      "qtd_colunas": 7,
+      "delimitador": ",",
+      "particionado": true,
+      "padrao_arquivo": "OperacoesEmUmMes_YYYYMM.csv"
+    },
+    "sgs": {
+      "colunas": ["data", "valor"],
+      "qtd_colunas": 2,
+      "delimitador": ";",
+      "particionado": false,
+      "padrao_arquivo": "*.csv",
+      "observacao": "O SGS usa ponto-e-vírgula como delimitador, diferente de todas as outras tabelas Olinda."
+    }
+  }
+}
