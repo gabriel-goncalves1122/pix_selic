@@ -1,0 +1,54 @@
+<!-- 08_roadmap_ouro.html -->
+<section>
+  <div class="slide-header">
+    <span class="slide-tag">ROADMAP & MODELAGEM</span>
+    <h2>Camada Ouro: O Futuro da Análise Integrada</h2>
+    <p class="slide-subdesc">Esquema da tabela consolidada que unificará os dados do Pix com os agregados econômicos do Banco Central.</p>
+  </div>
+
+  <div class="schema-grid-light">
+    <!-- Prata Pix -->
+    <div class="schema-card-light">
+      <div class="schema-card-head">prata_transacoes_pix</div>
+      <div class="schema-card-body">
+        <div class="schema-row"><span class="col-pk">ano_mes_dt</span><span class="col-type">date</span></div>
+        <div class="schema-row"><span>pag_pfpj</span><span class="col-type">str</span></div>
+        <div class="schema-row"><span>rec_pfpj</span><span class="col-type">str</span></div>
+        <div class="schema-row"><span>valor</span><span class="col-type">float64</span></div>
+        <div class="schema-row"><span>quantidade</span><span class="col-type">int64</span></div>
+      </div>
+    </div>
+
+    <!-- Ouro Fato Agregada -->
+    <div class="schema-card-light ouro-highlight">
+      <div class="schema-card-head ouro-head">★ ouro_pix_macro_mensal</div>
+      <div class="schema-card-body">
+        <div class="schema-row"><span class="col-pk">ano_mes (PK)</span><span class="col-type">int64</span></div>
+        <div class="schema-row"><span>qtd_transacoes_total</span><span class="col-type">int64</span></div>
+        <div class="schema-row"><span>vl_transacoes_total</span><span class="col-type">float64</span></div>
+        <div class="schema-row"><span>ticket_medio_pix</span><span class="col-type">float64</span></div>
+        <div class="schema-row"><span>pct_transacoes_pj</span><span class="col-type">float64</span></div>
+        <div class="schema-row macro-accent"><span>selic_meta_anual</span><span class="col-type">float64</span></div>
+        <div class="schema-row macro-accent"><span>ipca_acumulado_12m</span><span class="col-type">float64</span></div>
+        <div class="schema-row macro-accent"><span>taxa_fraude_100mil</span><span class="col-type">float64</span></div>
+      </div>
+    </div>
+
+    <!-- Prata Macro Real -->
+    <div class="schema-card-light">
+      <div class="schema-card-head">taxa_selic_mensal</div>
+      <div class="schema-card-body">
+        <div class="schema-row"><span class="col-pk">ano_mes_dt</span><span class="col-type">date</span></div>
+        <div class="schema-row"><span>selic_meta_fim_mes</span><span class="col-type">float64</span></div>
+        <div class="schema-row"><span>selic_realizada_media</span><span class="col-type">float64</span></div>
+        <div class="schema-row"><span>dias_uteis</span><span class="col-type">int64</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="roadmap-checklist">
+    <div class="check-item"><span class="check-badge ok">✓ Concluído</span> Prata Pix (Transações/Fraudes) + Prata Macro (Selic/Operações)</div>
+    <div class="check-item"><span class="check-badge next">➔ Próximo</span> Unificação na Camada Ouro (One Big Table / Star Schema)</div>
+    <div class="check-item"><span class="check-badge goal">★ Meta</span> Teste de hipótese: Inelasticidade da Adoção vs Custo de Juros</div>
+  </div>
+</section>

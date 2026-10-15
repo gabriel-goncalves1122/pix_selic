@@ -1,0 +1,69 @@
+<!-- 03_arquitetura.html -->
+<section>
+  <div class="slide-header">
+    <span class="slide-tag">ARQUITETURA DE DADOS</span>
+    <h2>Pipeline Medalhão: Resiliência e Linhagem</h2>
+  </div>
+
+  <div class="medalhao-wrapper">
+    <!-- Bloco Fontes -->
+    <div class="medalhao-col">
+      <div class="medalhao-box box-fontes">
+        <div class="box-badge">FONTES EXTERNAS</div>
+        <div class="box-title">APIs do Banco Central</div>
+        <div class="box-tech">OData Olinda · SGS · Dados Abertos</div>
+        <div class="box-desc">Dados transacionais Pix, fraudes e séries econômicas</div>
+      </div>
+    </div>
+
+    <div class="medalhao-arrow">
+      <span class="arrow-label">Python Requests<br>Checkpoint + Retry</span>
+      <span class="arrow-sym">➔</span>
+    </div>
+
+    <!-- Bloco Bronze -->
+    <div class="medalhao-col">
+      <div class="medalhao-box box-bronze">
+        <div class="box-badge bronze">CAMADA BRONZE</div>
+        <div class="box-title">Estoque Bruto (Raw)</div>
+        <div class="box-tech">CSV + proveniencia.json</div>
+        <div class="box-desc">Fidelidade total à fonte, rastreabilidade e metadados de ingestão</div>
+      </div>
+    </div>
+
+    <div class="medalhao-arrow">
+      <span class="arrow-label">Pandas ETL<br>Tipagem & Limpeza</span>
+      <span class="arrow-sym">➔</span>
+    </div>
+
+    <!-- Bloco Prata -->
+    <div class="medalhao-col">
+      <div class="medalhao-box box-prata">
+        <div class="box-badge prata">CAMADA PRATA</div>
+        <div class="box-title">Dados Higienizados</div>
+        <div class="box-tech">pix_limpo/ & macro_limpo/</div>
+        <div class="box-desc">Apache Parquet + CSV: transações, fraudes MED, taxa Selic e operações de mercado</div>
+      </div>
+    </div>
+
+    <div class="medalhao-arrow">
+      <span class="arrow-label">Agregação Temporal<br>Cálculo de Métricas</span>
+      <span class="arrow-sym">➔</span>
+    </div>
+
+    <!-- Bloco Ouro -->
+    <div class="medalhao-col">
+      <div class="medalhao-box box-ouro">
+        <div class="box-badge ouro">CAMADA OURO</div>
+        <div class="box-title">Data Marts Analíticos</div>
+        <div class="box-tech">Tabelas Fato / Star Schema</div>
+        <div class="box-desc">Pix agregado cruzado com IPCA e Selic para BI e inferência</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="medalhao-footer-note">
+    <span class="badge-mini r-lang">R ANALYTICS</span>
+    <span>A Camada Prata alimenta diretamente scripts exploratórios em R para validação de hipóteses e gráficos de dispersão.</span>
+  </div>
+</section>

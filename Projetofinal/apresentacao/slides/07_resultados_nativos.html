@@ -1,0 +1,75 @@
+<!-- 07_resultados_nativos.html -->
+<section>
+  <div class="slide-header">
+    <span class="slide-tag">RESULTADOS ANALÍTICOS</span>
+    <h2>Insights da Prata: Renderização Nativa (SVG & CSS)</h2>
+    <p class="slide-subdesc">Gráficos gerados diretamente no navegador, eliminando artefatos de imagem e mantendo escala vetorial nítida.</p>
+  </div>
+
+  <div class="cols">
+    <!-- Coluna 1: Curva Pix em SVG Nativo (Tema Claro) -->
+    <div class="card card-clean svg-card-clean">
+      <div class="card-icon-title">
+        <span class="badge-mini pix">SÉRIE TEMPORAL</span>
+        <h4>Evolução do Volume Pix (Mensal)</h4>
+      </div>
+      <p class="mini-chart-desc">Crescimento de <b>29.5M</b> (nov/20) para <b>7.37B</b> transações (ago/26)</p>
+
+      <svg viewBox="0 0 500 250" preserveAspectRatio="none" class="svg-curva-pix">
+        <!-- Grid lines claras -->
+        <line x1="30" y1="30" x2="470" y2="30" class="chart-grid-light" />
+        <line x1="30" y1="80" x2="470" y2="80" class="chart-grid-light" />
+        <line x1="30" y1="130" x2="470" y2="130" class="chart-grid-light" />
+        <line x1="30" y1="180" x2="470" y2="180" class="chart-grid-light" />
+        <line x1="30" y1="230" x2="470" y2="230" class="chart-grid-light" />
+
+        <!-- Labels Eixo Y -->
+        <text x="5" y="34" class="chart-axis-light">7.5B</text>
+        <text x="5" y="134" class="chart-axis-light">3.8B</text>
+        <text x="12" y="233" class="chart-axis-light">0</text>
+
+        <!-- Área preenchida com transparência suave -->
+        <polygon points="30.0,229.2 30.0,229.2 36.4,226.8 42.8,225.6 49.1,224.1 55.5,221.5 61.9,219.4 68.3,216.0 74.6,213.8 81.0,210.7 87.4,208.9 93.8,207.5 100.1,204.7 106.5,203.2 112.9,198.3 119.3,201.7 125.7,199.9 132.0,194.8 138.4,193.3 144.8,189.3 151.2,187.8 157.5,184.8 163.9,181.9 170.3,180.3 176.7,177.0 183.0,175.6 189.4,167.3 195.8,173.6 202.2,174.3 208.6,164.2 214.9,164.9 221.3,158.7 227.7,156.1 234.1,150.4 240.4,145.2 246.8,143.4 253.2,138.1 259.6,134.2 265.9,121.1 272.3,130.4 278.7,130.5 285.1,118.2 291.4,117.7 297.8,110.5 304.2,109.6 310.6,106.2 317.0,100.5 323.3,103.4 329.7,98.2 336.1,96.3 342.5,82.4 348.8,99.2 355.2,101.1 361.6,86.1 368.0,85.3 374.3,76.7 380.7,80.1 387.1,74.9 393.5,68.7 399.9,71.4 406.2,63.2 412.6,63.0 419.0,46.5 425.4,65.5 431.7,75.2 438.1,55.7 444.5,57.3 450.9,45.9 457.2,49.5 463.6,42.8 470.0,39.5 470.0,230 30.0,230" fill="rgba(0, 135, 121, 0.12)" />
+
+        <!-- Linha do gráfico em verde escuro corporativo -->
+        <polyline fill="none" stroke="#008779" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"
+          points="30.0,229.2 36.4,226.8 42.8,225.6 49.1,224.1 55.5,221.5 61.9,219.4 68.3,216.0 74.6,213.8 81.0,210.7 87.4,208.9 93.8,207.5 100.1,204.7 106.5,203.2 112.9,198.3 119.3,201.7 125.7,199.9 132.0,194.8 138.4,193.3 144.8,189.3 151.2,187.8 157.5,184.8 163.9,181.9 170.3,180.3 176.7,177.0 183.0,175.6 189.4,167.3 195.8,173.6 202.2,174.3 208.6,164.2 214.9,164.9 221.3,158.7 227.7,156.1 234.1,150.4 240.4,145.2 246.8,143.4 253.2,138.1 259.6,134.2 265.9,121.1 272.3,130.4 278.7,130.5 285.1,118.2 291.4,117.7 297.8,110.5 304.2,109.6 310.6,106.2 317.0,100.5 323.3,103.4 329.7,98.2 336.1,96.3 342.5,82.4 348.8,99.2 355.2,101.1 361.6,86.1 368.0,85.3 374.3,76.7 380.7,80.1 387.1,74.9 393.5,68.7 399.9,71.4 406.2,63.2 412.6,63.0 419.0,46.5 425.4,65.5 431.7,75.2 438.1,55.7 444.5,57.3 450.9,45.9 457.2,49.5 463.6,42.8 470.0,39.5" />
+
+        <!-- Labels Eixo X -->
+        <text x="30" y="247" class="chart-axis-light">nov/2020</text>
+        <text x="175" y="247" class="chart-axis-light">2022</text>
+        <text x="320" y="247" class="chart-axis-light">2024</text>
+        <text x="430" y="247" class="chart-axis-light">ago/2026</text>
+      </svg>
+    </div>
+
+    <!-- Coluna 2: Funil MED em CSS Nativo (Tema Claro) -->
+    <div class="card card-clean">
+      <div class="card-icon-title">
+        <span class="badge-mini warn">SEGURANÇA</span>
+        <h4>Funil do MED: Dificuldade de Ressarcimento</h4>
+      </div>
+      <p class="mini-chart-desc">De 53.1M de contestações, minoria resulta em devolução financeira</p>
+
+      <div class="funil-container-light">
+        <div class="funil-step-light s1">
+          <div class="f-num">53.109.835</div>
+          <div class="f-lbl">1. Contestações Registradas (100%)</div>
+        </div>
+        <div class="funil-step-light s2">
+          <div class="f-num">14.128.499</div>
+          <div class="f-lbl">2. Aceitas / Fraude Confirmada (26.6%)</div>
+        </div>
+        <div class="funil-step-light s3">
+          <div class="f-num">4.693.451</div>
+          <div class="f-lbl">3. Devolvidas pelo MED (8.8%)</div>
+        </div>
+      </div>
+
+      <div class="funil-note-light">
+        <b>33.2%</b> das fraudes confirmadas conseguem devolução.<br>
+        <span style="color: #b91c1c;">Gargalo estrutural:</span> Esvaziamento rápido de saldo em contas laranjas.
+      </div>
+    </div>
+  </div>
+</section>

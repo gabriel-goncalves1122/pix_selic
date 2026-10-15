@@ -1,0 +1,92 @@
+<!-- 05_tabela_depara.html -->
+<section>
+  <div class="slide-header">
+    <span class="slide-tag">TRANSFORMAÇÃO DE DADOS</span>
+    <h2>Matriz De / Para: Higienização da Bronze para a Prata</h2>
+    <p class="slide-subdesc">Mapeamento dos dados sujos originais, funções responsáveis pelo tratamento e o resultado tipado na Camada Prata.</p>
+  </div>
+
+  <table class="tabela-depara">
+    <thead>
+      <tr>
+        <th>Coluna Original</th>
+        <th>Dado Bruto (Bronze)</th>
+        <th>Problema</th>
+        <th>Função Aplicada</th>
+        <th>O Que a Função Faz</th>
+        <th>Dado Limpo (Prata)</th>
+        <th>Tipo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>VALOR</code></td>
+        <td><span class="dado-sujo">"7272767,37"</span></td>
+        <td>Texto c/ vírgula</td>
+        <td><code>tratar_valor_financeiro()</code></td>
+        <td>Converte vírgula para ponto e tipa em Float</td>
+        <td><span class="dado-limpo">7272767.37</span></td>
+        <td><span class="badge-type float">float64</span></td>
+      </tr>
+      <tr>
+        <td><code>AnoMes</code></td>
+        <td><span class="dado-sujo">202011</span></td>
+        <td>Inteiro YYYYMM</td>
+        <td><code>pd.to_datetime()</code></td>
+        <td>Indexa como primeiro dia do mês (YYYY-MM-01)</td>
+        <td><span class="dado-limpo">2020-11-01</span></td>
+        <td><span class="badge-type date">date</span></td>
+      </tr>
+      <tr>
+        <td><code>ValorPixcontestadosaceitos</code></td>
+        <td><span class="dado-sujo">"698566565,98"</span></td>
+        <td>Texto c/ milhar e vírgula</td>
+        <td><code>limpar_estatisticas_fraudes()</code></td>
+        <td>Elimina pontos de milhar e converte decimal</td>
+        <td><span class="dado-limpo">698566565.98</span></td>
+        <td><span class="badge-type float">float64</span></td>
+      </tr>
+      <tr>
+        <td><code>QtdePixcontestados</code></td>
+        <td><span class="dado-sujo">1328141 (Pascal)</span></td>
+        <td>Nome fora do padrão</td>
+        <td><code>renames</code> (Semântico)</td>
+        <td>Padroniza com prefixo semântico <code>qtd_*</code></td>
+        <td><span class="dado-limpo">qtd_pix_contestados</span></td>
+        <td><span class="badge-type int">int64</span></td>
+      </tr>
+      <tr>
+        <td><code>VL_PagadorPF</code></td>
+        <td><span class="dado-sujo">Nome em Upper/Camel</span></td>
+        <td>Nomes heterogêneos</td>
+        <td><code>to_snake_case()</code></td>
+        <td>Regex para separação por underscore minúsculo</td>
+        <td><span class="dado-limpo">vl_pagador_pf</span></td>
+        <td><span class="badge-type str">snake</span></td>
+      </tr>
+      <tr>
+        <td><code>valor (SGS 432)</code></td>
+        <td><span class="dado-sujo">"2,00"</span></td>
+        <td>Vírgula e sep <code>;</code></td>
+        <td><code>limpeza_taxa_selic()</code></td>
+        <td>Converte vírgula, anualiza base 252 e agrega mês</td>
+        <td><span class="dado-limpo">2.00</span></td>
+        <td><span class="badge-type float">float64</span></td>
+      </tr>
+      <tr>
+        <td><code>Mes (Olinda Selic)</code></td>
+        <td><span class="dado-sujo">"2020-01"</span></td>
+        <td>82 CSVs em string</td>
+        <td><code>limpeza_operacoes_selic()</code></td>
+        <td>Concatena arquivos e cria índice temporal canônico</td>
+        <td><span class="dado-limpo">2020-01-01</span></td>
+        <td><span class="badge-type date">date</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="depara-footer">
+    <span class="footer-highlight">Resumo Técnico:</span> 
+    Eliminação de 100% dos tipos <code>object</code> em colunas quantitativas, viabilizando agregação matemática e partição colunar.
+  </div>
+</section>
