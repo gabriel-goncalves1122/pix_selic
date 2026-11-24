@@ -1,0 +1,36 @@
+# Dados: ficam apenas na maquina local, nunca no GitHub.
+# O codigo do projeto reconstroi estes arquivos.
+dados/bronze/*
+dados/prata/*
+dados/ouro/*
+!dados/bronze/.gitkeep
+!dados/prata/.gitkeep
+!dados/prata/**/proveniencia.jsonl
+!dados/ouro/.gitkeep
+
+# Banco DuckDB e logs de execucao
+*.duckdb
+*.duckdb.wal
+pipeline.log
+
+# dbt
+*/target/
+*/dbt_packages/
+*/logs/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Ambiente virtual
+.venv/
+venv/
+
+# Configuracoes do editor
+.vscode/
+.idea/
+
+# Credenciais
+.env
+kaggle.json

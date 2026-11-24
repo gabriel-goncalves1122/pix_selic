@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: prata
+    schema: prata
+    description: Tabelas limpas e enriquecidas em Parquet carregadas pela etapa carga.py.
+    tables:
+      - name: transacoes_pix
+      - name: fraudes_pix
+      - name: usuarios_dict
+      - name: taxa_selic
+      - name: taxa_ipca
+      - name: meios_pagamento
+      - name: cartoes_trimestral
+      - name: pix_macro_enriquecido

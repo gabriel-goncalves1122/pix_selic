@@ -4,3 +4,8 @@ fg-data-profiling
 setuptools<82
 pyarrow
 fastparquet
+duckdb
+dbt-core
+dbt-duckdb
+streamlit
+pytest

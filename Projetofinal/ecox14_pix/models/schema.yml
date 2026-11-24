@@ -1,0 +1,198 @@
+version: 2
+
+models:
+  - name: dim_tempo
+    description: >
+      Dimensao de calendario mensal (YYYYMM) com atributos de trimestre para cruzamento com cartoes.
+    columns:
+      - name: ano_mes
+        description: Chave primaria inteira no formato YYYYMM.
+        data_tests:
+          - unique
+          - not_null
+      - name: data_mes
+        description: Primeiro dia do mes no formato DATE.
+        data_tests:
+          - not_null
+      - name: ano
+        description: Ano calendario.
+      - name: mes
+        description: Mes calendario (1 a 12).
+      - name: trimestre
+        description: Chave inteira YYYYQ (ex. 20241).
+      - name: ano_trimestre
+        description: Rotulo do trimestre (ex. 2024-T1).
+      - name: periodo_label
+        description: Rotulo YYYY-MM para exibicao em graficos.
+
+  - name: dim_natureza_pix
+    description: Combinacoes de natureza economica (P2P, P2B, etc.), finalidade e forma de iniciacao do Pix.
+    columns:
+      - name: natureza_id
+        description: Chave substituta MD5.
+        data_tests:
+          - unique
+          - not_null
+
+  - name: dim_regiao
+    description: Regioes geograficas do Brasil (pagador/recebedor) presentes nas estatisticas Pix.
+    columns:
+      - name: regiao_id
+        description: Chave substituta MD5 da regiao.
+        data_tests:
+          - unique
+          - not_null
+      - name: regiao
+        description: Nome da regiao geografica ou 'Nao informado'.
+
+  - name: dim_faixa_etaria
+    description: Faixas etarias do pagador ordenadas cronologicamente para analise geracional.
+    columns:
+      - name: idade_id
+        description: Chave substituta MD5 da faixa etaria.
+        data_tests:
+          - unique
+          - not_null
+      - name: faixa_etaria
+        description: Descricao da faixa etaria (ate 19 anos ... mais de 60 anos).
+      - name: ordem_etaria
+        description: Ordem numerica de exibicao (1 a 8).
+
+  - name: dim_funcao_cartao
+    description: Meios de pagamento comparados trimestralmente (Pix, Credito, Debito, Pre-Pago).
+    columns:
+      - name: funcao_id
+        description: Chave substituta MD5 do meio de pagamento.
+        data_tests:
+          - unique
+          - not_null
+      - name: nome_funcao
+        description: Nome do instrumento (Pix, Crédito, Débito, Pré-Pago).
+
+  - name: fato_pix_macro_mensal
+    description: >
+      Fato principal mensal (grao: ano_mes) unindo Pix, Meios Tradicionais (TED, Boleto, Cheque, DOC),
+      Funil MED completo, Contas Laranjas, DICT, Selic, IPCA e Juro Real.
+    columns:
+      - name: ano_mes
+        description: Chave primaria e FK para dim_tempo.
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tempo')
+                field: ano_mes
+      - name: qtd_transacoes_total
+        description: Quantidade total de transacoes Pix no mes.
+        data_tests:
+          - not_null
+      - name: vl_transacoes_total
+        description: Volume financeiro nominal do Pix no mes (R$).
+        data_tests:
+          - not_null
+      - name: vl_pix_real_deflacionado
+        description: Volume do Pix deflacionado pelo IPCA a precos constantes do ultimo mes.
+      - name: juro_real_ex_post_pct
+        description: Taxa de juro real ex-post (Equacao de Fisher entre Selic Meta e IPCA 12m).
+      - name: participacao_pix_qtd_pct
+        description: Participacao do Pix (%) na quantidade total de meios de pagamento (Pix+TED+Boleto+Cheque+DOC).
+      - name: custo_fraude_nao_devolvido
+        description: Valor contestado aceito menos o total devolvido via MED (R$).
+      - name: taxa_efetividade_med_pct
+        description: Percentual de contestacoes aceitas com devolucao integral ou parcial pelo MED.
+      - name: razao_chaves_usuario_fraude
+        description: Media de chaves Pix marcadas por CPF/CNPJ fraudador (indicador de contas laranjas).
+
+  - name: fato_pix_segmentado_mensal
+    description: Fato segmentada por mes, natureza/finalidade e perfil PF/PJ.
+    columns:
+      - name: ano_mes
+        description: FK para dim_tempo.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tempo')
+                field: ano_mes
+      - name: natureza_id
+        description: FK para dim_natureza_pix.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_natureza_pix')
+                field: natureza_id
+
+  - name: fato_pix_regional_mensal
+    description: Matriz mensal de fluxos Pix entre regiao pagadora e regiao recebedora.
+    columns:
+      - name: ano_mes
+        description: FK para dim_tempo.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tempo')
+                field: ano_mes
+      - name: pag_regiao_id
+        description: FK para dim_regiao (origem).
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_regiao')
+                field: regiao_id
+      - name: rec_regiao_id
+        description: FK para dim_regiao (destino).
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_regiao')
+                field: regiao_id
+
+  - name: fato_pix_etario_mensal
+    description: Fato mensal de adocao do Pix por faixa etaria do pagador.
+    columns:
+      - name: ano_mes
+        description: FK para dim_tempo.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tempo')
+                field: ano_mes
+      - name: idade_id
+        description: FK para dim_faixa_etaria.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_faixa_etaria')
+                field: idade_id
+
+  - name: fato_cartoes_vs_pix_trimestral
+    description: Fato comparativa trimestral entre Pix e Cartoes (Credito, Debito, Pre-Pago).
+    columns:
+      - name: trimestre
+        description: Trimestre YYYYQ.
+        data_tests:
+          - not_null
+      - name: funcao_id
+        description: FK para dim_funcao_cartao.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_funcao_cartao')
+                field: funcao_id
+
+  - name: vw_pix_macro_completo
+    description: View analitica principal unindo fato_pix_macro_mensal e dim_tempo.
+  - name: vw_pix_regional_fluxo
+    description: View de fluxo regional (pagadora -> recebedora) pronta para o dashboard.
+  - name: vw_pix_etario
+    description: View de adocao etaria ordenada pronta para o dashboard.
+  - name: vw_cartoes_vs_pix_trimestral
+    description: View comparando Pix vs Cartoes por trimestre com share de quantidade e valor.

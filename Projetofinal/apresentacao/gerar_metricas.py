@@ -9,14 +9,14 @@ import pandas as pd
 
 AQUI = Path(__file__).parent
 PROJ = AQUI.parent
-BRONZE = PROJ / "bronze" / "data" / "pix_bruto" / "Pix_DadosAbertos"
-PRATA = PROJ / "prata" / "data" / "pix_limpo"
+BRONZE = PROJ / "dados" / "bronze" / "pix_bruto" / "Pix_DadosAbertos"
+PRATA = PROJ / "dados" / "prata" / "pix_limpo"
 
 DATASETS = {
     "transacoes": (BRONZE / "EstatisticasTransacoesPix" / "EstatisticasTransacoesPix_202011.csv",
-                   PRATA / "estatisticas_transacoes_pix.csv"),
+                   PRATA / "estatisticas_transacoes_pix.parquet"),
     "fraudes": (BRONZE / "EstatisticasFraudesPix" / "EstatisticasFraudesPix_202011.csv",
-                PRATA / "estatisticas_fraudes_pix.csv"),
+                PRATA / "estatisticas_fraudes_pix.parquet"),
 }
 
 
@@ -43,10 +43,10 @@ def main():
     out = {"datasets": {}, "staircase": {}}
     for nome, (b, p) in DATASETS.items():
         bronze = pd.read_csv(b)
-        prata = pd.read_csv(p, parse_dates=["ano_mes_dt"])
+        prata = pd.read_parquet(p)
         out["datasets"][nome] = {
             "bronze": perfil(bronze) | {"mb": tamanho_mb(b)},
-            "prata": perfil(prata) | {"mb_parquet": tamanho_mb(p.with_suffix(".parquet"))},
+            "prata": perfil(prata) | {"mb_parquet": tamanho_mb(p)},
         }
     pasta = BRONZE / "EstatisticasTransacoesPix"
     out["staircase"] = {
