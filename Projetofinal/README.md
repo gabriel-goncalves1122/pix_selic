@@ -2,7 +2,7 @@
 
 ## Tema
 
-**Análise do "Custo Brasil" financeiro através da evolução e adoção do Pix cruzada com indicadores macroeconômicos (Selic e IPCA) e segurança (MED).**
+**Radiografia do Pix no Brasil: substituição de meios de pagamento, dinâmica regional/etária, indicadores macroeconômicos (Selic e IPCA) e segurança (MED).**
 
 ### Pergunta Norteadora
 
@@ -77,7 +77,11 @@ uv run streamlit run dashboard/painel.py
 
 ---
 
-## Documentação Técnica (`docs/`)
+## Documentação Técnica (`docs/`) e Análises (`analises/`)
+
+- **Relatórios Analíticos (`analises/`):**
+  - [Relatório Analítico — Camada Ouro (Teorias, Gráficos e Evidências)](analises/ouro/RELATORIO_ANALISES_OURO.md)
+  - [Relatório Executivo — Camada Prata](analises/prata/RELATORIO_ANALISES_PRATA.md)
 
 - **Arquitetura e Qualidade:**
   - [Decisões de Tratamento e Atributos Derivados](docs/arquitetura/decisoes_tratamento.md)
