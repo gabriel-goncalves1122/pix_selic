@@ -1,0 +1,83 @@
+<!-- 05_qualidade_e_consumo.html -->
+<section class="slide" data-slide="5">
+  <div class="canvas-pad">
+    <div class="slide-header">
+      <div>
+        <div class="kicker">Confiabilidade &amp; Escopo</div>
+        <h2 class="slide-title">Valida&ccedil;&atilde;o dos Dados e Eixos Anal&iacute;ticos</h2>
+      </div>
+      <span class="badge-pill">Streamlit + DuckDB</span>
+    </div>
+
+    <div class="s5-grid">
+      <div class="trust-col">
+        <div class="card trust-card reveal">
+          <div class="trust-top">
+            <span class="trust-num">37 / 37</span>
+            <span class="trust-label">Testes de Regra (dbt)</span>
+          </div>
+          <ul class="trust-bullets">
+            <li>&bull; Soma das regi&otilde;es confere com o total nacional</li>
+            <li>&bull; Gr&atilde;o &uacute;nico garantido (sem duplicar trimestre ou m&ecirc;s)</li>
+            <li>&bull; Valores &ge; 0 e chaves estrangeiras v&aacute;lidas nas 5 fatos</li>
+          </ul>
+        </div>
+
+        <div class="card trust-card navy reveal">
+          <div class="trust-top">
+            <span class="trust-num">10 / 10</span>
+            <span class="trust-label">Testes Unit&aacute;rios (pytest)</span>
+          </div>
+          <ul class="trust-bullets">
+            <li>&bull; C&aacute;lculos de IPCA, Fisher e limpeza da Prata validados</li>
+            <li>&bull; Formata&ccedil;&atilde;o pt-BR e gr&aacute;ficos Plotly testados de ponta a ponta</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card roadmap-card reveal">
+        <div>
+          <div class="kicker" style="margin-bottom:4px;">Eixos Anal&iacute;ticos</div>
+          <div class="roadmap-title">Perguntas Respondidas no Painel</div>
+        </div>
+
+        <div class="roadmap-steps">
+          <div class="step-row">
+            <div class="step-num">1</div>
+            <div>
+              <div class="step-name">Macroeconomia &amp; Juro Real</div>
+              <div class="step-desc">Como o volume real do Pix cresceu frente &agrave; Selic e ao IPCA?</div>
+            </div>
+          </div>
+          <div class="step-row">
+            <div class="step-num">2</div>
+            <div>
+              <div class="step-name">Pix vs. Cart&otilde;es &amp; Tradicionais</div>
+              <div class="step-desc">Quanto o Pix tomou de Cr&eacute;dito, D&eacute;bito, TED e DOC?</div>
+            </div>
+          </div>
+          <div class="step-row">
+            <div class="step-num">3</div>
+            <div>
+              <div class="step-name">Geografia &amp; Faixa Et&aacute;ria</div>
+              <div class="step-desc">Quais regi&otilde;es concentram super&aacute;vit e quem mais adota?</div>
+            </div>
+          </div>
+          <div class="step-row">
+            <div class="step-num">4</div>
+            <div>
+              <div class="step-name">Seguran&ccedil;a &amp; Funil MED</div>
+              <div class="step-desc">Qual a efetividade das devolu&ccedil;&otilde;es e o peso das laranjas?</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-row">
+          <a class="cta-btn" href="http://localhost:8501" target="_blank" rel="noopener">Abrir Painel Streamlit (8501) &rarr;</a>
+          <a class="cta-btn secondary" href="http://localhost:8080" target="_blank" rel="noopener">Linhagem dbt docs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pagenum">05 / 05</div>
+</section>

@@ -20,10 +20,10 @@ HTML_TEMPLATE = """<!doctype html>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pix × Custo Brasil — Projeto Final ECOX14</title>
-  <link rel="stylesheet" href="vendor/reveal.js/dist/reset.css">
-  <link rel="stylesheet" href="vendor/reveal.js/dist/reveal.css">
-  <link rel="stylesheet" href="vendor/reveal.js/dist/theme/white.css">
-  <link rel="stylesheet" href="css/custom.css">
+  <link rel="stylesheet" href="../vendor/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../vendor/reveal.js/dist/reveal.css">
+  <link rel="stylesheet" href="../vendor/reveal.js/dist/theme/white.css">
+  <link rel="stylesheet" href="../css/custom.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
@@ -32,9 +32,9 @@ HTML_TEMPLATE = """<!doctype html>
 
 </div></div>
 
-<script src="vendor/reveal.js/dist/reveal.js"></script>
-<script src="vendor/reveal.js/plugin/notes/notes.js"></script>
-<script src="vendor/chart.umd.min.js"></script>
+<script src="../vendor/reveal.js/dist/reveal.js"></script>
+<script src="../vendor/reveal.js/plugin/notes/notes.js"></script>
+<script src="../vendor/chart.umd.min.js"></script>
 <script src="data/metricas.js"></script>
 <script src="js/graficos.js"></script>
 <script>

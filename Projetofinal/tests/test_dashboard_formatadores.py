@@ -12,6 +12,11 @@ from fmt_brasil import (
     br,
     escalar_serie,
     formatar_coluna_br,
+    preparar_tabela_cartoes,
+    preparar_tabela_macro,
+    preparar_tabela_regional,
+)
+from notas import (
     nota_causas_nao_devolucao,
     nota_comparativo_cartoes,
     nota_dispersao_macro,
@@ -25,9 +30,6 @@ from fmt_brasil import (
     nota_saldo_liquido,
     nota_share_meios,
     nota_volume_nominal_real,
-    preparar_tabela_cartoes,
-    preparar_tabela_macro,
-    preparar_tabela_regional,
 )
 from graficos import (
     grafico_causas_nao_devolucao,

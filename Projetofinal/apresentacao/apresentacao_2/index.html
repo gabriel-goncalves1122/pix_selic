@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Radiografia do Pix no Brasil — Parte II (ECOX14)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+/* ===========================================
+   THEME TOKENS (LIGHT EDITORIAL + WHITE CARDS)
+   =========================================== */
+:root {
+  --stage-bg: #0f172a;
+  --slide-bg: #f1f5f9;
+  --card-bg: #ffffff;
+  --navy: #0f2544;
+  --emerald: #0d9488;
+  --emerald-soft: #f0fdfa;
+  --amber: #d97706;
+  --amber-soft: #fffbeb;
+  --slate: #475569;
+  --border: #cbd5e1;
+  --grid: rgba(15, 37, 68, 0.04);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ===========================================
+   FIXED 16:9 STAGE: MANDATORY BASE STYLES
+   =========================================== */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--stage-bg, #000);
+}
+
+.deck-viewport {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--stage-bg, #000);
+}
+
+.deck-stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  transform-origin: 0 0;
+  background: var(--slide-bg, #fff);
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  background: var(--slide-bg, #fff);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--navy);
+  transition: opacity 0.28s ease, visibility 0.28s ease;
+}
+
+.slide.active,
+.slide.visible {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+img, video, canvas, svg { max-width: 100%; max-height: 100%; }
+
+.deck-controls {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+@media print {
+  html, body {
+    width: 1920px;
+    height: auto;
+    overflow: visible;
+    background: #fff;
+  }
+  .deck-viewport {
+    position: static;
+    overflow: visible;
+    background: #fff;
+  }
+  .deck-stage {
+    position: static;
+    width: auto;
+    height: auto;
+    transform: none !important;
+    background: none;
+  }
+  .slide {
+    position: relative;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    width: 1920px;
+    height: 1080px;
+    break-after: page;
+    page-break-after: always;
+  }
+  .slide:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+  .deck-controls, .edit-pill { display: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.2s !important;
+  }
+}
+
+/* ===========================================
+   SUBTLE CANVAS GRID & PAGE FRAME
+   =========================================== */
+.slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.canvas-pad {
+  position: relative;
+  z-index: 2;
+  width: 1920px;
+  height: 1080px;
+  padding: 64px 88px 72px;
+  display: flex;
+  flex-direction: column;
+}
+
+.pagenum {
+  position: absolute;
+  right: 88px;
+  bottom: 30px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--slate);
+  z-index: 5;
+}
+
+/* ===========================================
+   SHARED HEADERS & WHITE CARDS
+   =========================================== */
+.slide-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 22px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 34px;
+}
+.kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--emerald);
+  margin-bottom: 8px;
+}
+.slide-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 700;
+  font-size: 54px;
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  color: var(--navy);
+}
+.badge-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  color: var(--navy);
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(15, 37, 68, 0.06);
+}
+
+/* ===========================================
+   ANIMATIONS
+   =========================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s var(--ease-out-expo), transform 0.55s var(--ease-out-expo);
+}
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(2) { transition-delay: 0.08s; }
+.reveal:nth-child(3) { transition-delay: 0.16s; }
+.reveal:nth-child(4) { transition-delay: 0.24s; }
+
+/* ===========================================
+   SLIDE 1: CAPA
+   =========================================== */
+.cover-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 56px;
+  align-items: center;
+}
+.cover-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--emerald);
+  margin-bottom: 24px;
+}
+.cover-h1 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 700;
+  font-size: 98px;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--navy);
+}
+.cover-h1 span { color: var(--emerald); }
+.cover-sub {
+  margin-top: 28px;
+  font-size: 32px;
+  line-height: 1.38;
+  font-weight: 500;
+  color: var(--slate);
+  max-width: 920px;
+}
+.author-card {
+  margin-top: 54px;
+  padding: 28px 34px;
+  display: inline-block;
+  border-left: 6px solid var(--emerald);
+}
+.author-name { font-size: 30px; font-weight: 800; color: var(--navy); }
+.author-url {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--emerald);
+  margin-top: 8px;
+}
+.cover-art {
+  height: 760px;
+  padding: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(160deg, #ffffff 0%, #f0fdfa 100%);
+}
+
+/* ===========================================
+   SLIDE 2: PARTICULARIDADES COM FORMAS
+   =========================================== */
+.s2-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.kpi-card {
+  padding: 34px 36px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  border-top: 6px solid var(--navy);
+}
+.kpi-card.teal { border-top-color: var(--emerald); }
+.kpi-card.amber { border-top-color: var(--amber); }
+.icon-box {
+  width: 84px;
+  height: 84px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #eff6ff;
+}
+.kpi-card.teal .icon-box { background: var(--emerald-soft); }
+.kpi-card.amber .icon-box { background: var(--amber-soft); }
+.kpi-num {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 1;
+  color: var(--navy);
+}
+.kpi-card.teal .kpi-num { color: var(--emerald); }
+.kpi-card.amber .kpi-num { color: var(--amber); }
+.kpi-title { font-size: 23px; font-weight: 700; color: var(--navy); margin-top: 8px; }
+.kpi-sub { font-size: 18px; color: var(--slate); margin-top: 4px; }
+
+.s2-topics {
+  margin-top: 30px;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 26px;
+}
+.topic-card {
+  padding: 32px 36px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.topic-badge {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #f1f5f9;
+  border: 2px solid var(--border);
+}
+.topic-title { font-size: 27px; font-weight: 800; color: var(--navy); }
+.topic-desc { font-size: 21px; color: var(--slate); margin-top: 8px; line-height: 1.4; }
+
+/* ===========================================
+   SLIDE 3: ARQUITETURA COM FORMAS
+   =========================================== */
+.arch-card {
+  flex: 1;
+  padding: 36px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===========================================
+   SLIDE 4: MODELO ESTRELA (ERD)
+   =========================================== */
+.erd-card {
+  flex: 1;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.erd-node, .erd-edge { transition: opacity 0.2s ease; }
+.erd-fact { cursor: pointer; }
+.erd-card.has-hover .erd-node,
+.erd-card.has-hover .erd-edge { opacity: 0.16; }
+.erd-card.has-hover .erd-node.is-active,
+.erd-card.has-hover .erd-edge.is-active { opacity: 1; }
+
+/* ===========================================
+   SLIDE 5: CONCLUSAO & ROTEIRO PARA A PLATEIA
+   =========================================== */
+.s5-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 0.92fr 1.08fr;
+  gap: 36px;
+  align-items: stretch;
+}
+.trust-col { display: flex; flex-direction: column; gap: 28px; }
+.trust-card {
+  flex: 1;
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 8px solid var(--emerald);
+}
+.trust-card.navy { border-left-color: var(--navy); }
+.trust-top { display: flex; align-items: baseline; gap: 20px; }
+.trust-num {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 72px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--emerald);
+}
+.trust-card.navy .trust-num { color: var(--navy); }
+.trust-label { font-size: 28px; font-weight: 800; color: var(--navy); }
+.trust-bullets {
+  margin-top: 18px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 21px;
+  color: var(--slate);
+}
+.roadmap-card {
+  padding: 40px 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-top: 8px solid var(--navy);
+}
+.roadmap-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--navy);
+}
+.roadmap-steps { display: flex; flex-direction: column; gap: 18px; margin: 20px 0; }
+.step-row {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 20px 24px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+}
+.step-num {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.step-name { font-size: 23px; font-weight: 800; color: var(--navy); }
+.step-desc { font-size: 19px; color: var(--slate); margin-top: 2px; }
+.cta-row { display: flex; gap: 16px; padding-top: 12px; }
+.cta-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 17px;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 16px 26px;
+  border-radius: 12px;
+  background: var(--emerald);
+  color: #ffffff;
+}
+.cta-btn.secondary {
+  background: #f1f5f9;
+  color: var(--navy);
+  border: 1.5px solid var(--border);
+}
+
+/* ===========================================
+   INLINE EDIT MODE (PRESS E)
+   =========================================== */
+.edit-pill {
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 2000;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 8px 12px;
+  background: #ffffff;
+  color: var(--navy);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  opacity: 0.15;
+  transition: opacity 0.2s ease;
+}
+.edit-pill:hover,
+body.editing .edit-pill { opacity: 1; }
+body.editing [contenteditable="true"] {
+  outline: 2px dashed var(--emerald);
+  outline-offset: 4px;
+}
+
+  </style>
+</head>
+<body>
+  <button class="edit-pill" id="editToggle" title="Atalho: tecla E">Editar (E)</button>
+
+  <div class="deck-viewport">
+    <main class="deck-stage" id="deckStage">
+<!-- 01_capa.html -->
+<section class="slide active visible" data-slide="1">
+  <div class="canvas-pad">
+    <div class="cover-grid">
+      <div>
+        <div class="cover-eyebrow reveal">UNIFEI &middot; T&Oacute;PICOS ESPECIAIS EM PROGRAMA&Ccedil;&Atilde;O I (ECOX14) &middot; ENTREGA N2</div>
+        <h1 class="cover-h1 reveal">Radiografia do<br><span>Pix no Brasil</span></h1>
+        <p class="cover-sub reveal">Substitui&ccedil;&atilde;o de Meios, Fluxo Regional e Seguran&ccedil;a</p>
+
+        <div class="card author-card reveal">
+          <div class="author-name">Gabriel Gon&ccedil;alves</div>
+          <div class="author-url">https://github.com/gabriel-goncalves1122/pix_selic</div>
+        </div>
+      </div>
+
+      <div class="card cover-art reveal">
+        <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+          <span class="badge-pill">BCB Olinda &amp; SGS</span>
+          <span style="width:14px; height:14px; border-radius:50%; background:#0d9488;"></span>
+        </div>
+
+        <svg viewBox="0 0 560 440" width="520" height="410" fill="none" aria-label="Curva estilizada da ascensao do Pix frente aos meios tradicionais">
+          <!-- Eixos e linhas de grade -->
+          <line x1="60" y1="360" x2="510" y2="360" stroke="#94A3B8" stroke-width="2"/>
+          <line x1="60" y1="70" x2="60" y2="360" stroke="#94A3B8" stroke-width="2"/>
+          <line x1="60" y1="265" x2="510" y2="265" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="6 6"/>
+          <line x1="60" y1="170" x2="510" y2="170" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="6 6"/>
+
+          <!-- Meios tradicionais / Cartoes em queda relativa -->
+          <path d="M 75 145 C 190 155, 320 215, 495 290" stroke="#94A3B8" stroke-width="4" stroke-dasharray="9 7" stroke-linecap="round"/>
+          <circle cx="495" cy="290" r="7" fill="#94A3B8"/>
+          <text x="495" y="318" text-anchor="end" font-size="16" font-weight="700" fill="#64748B" font-family="Plus Jakarta Sans, sans-serif">Cart&otilde;es / Trad.</text>
+
+          <!-- Area sob a curva do Pix -->
+          <path d="M 75 345 C 180 330, 290 220, 495 92 L 495 360 L 75 360 Z" fill="#0D9488" fill-opacity="0.10"/>
+
+          <!-- Curva ascendente do Pix -->
+          <path d="M 75 345 C 180 330, 290 220, 495 92" stroke="#0D9488" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="75" cy="345" r="8" fill="#0F2544"/>
+          <circle cx="285" cy="225" r="8" fill="#0D9488"/>
+          <circle cx="495" cy="92" r="10" fill="#0D9488" stroke="#FFFFFF" stroke-width="3"/>
+
+          <!-- Rotulos -->
+          <text x="75" y="390" font-size="16" font-weight="700" fill="#475569" font-family="JetBrains Mono, monospace">2020</text>
+          <text x="495" y="390" text-anchor="end" font-size="16" font-weight="700" fill="#475569" font-family="JetBrains Mono, monospace">2026</text>
+          <text x="495" y="72" text-anchor="end" font-size="20" font-weight="800" fill="#0D9488" font-family="Plus Jakarta Sans, sans-serif">Pix (63,6% share)</text>
+        </svg>
+
+        <div style="width:100%; display:flex; justify-content:space-between; font-size:17px; font-weight:700; color:#475569;">
+          <span>Macroeconomia</span>
+          <span>Pagamentos</span>
+          <span>Regi&otilde;es</span>
+          <span>Seguran&ccedil;a MED</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pagenum">01 / 05</div>
+</section>
+
+<!-- 02_recap_e_evolucao.html -->
+<section class="slide" data-slide="2">
+  <div class="canvas-pad">
+    <div class="slide-header">
+      <div>
+        <div class="kicker">Particularidades do Contexto</div>
+        <h2 class="slide-title">Assimetrias e Nuances dos Dados do BCB</h2>
+      </div>
+      <span class="badge-pill">Olinda &amp; SGS</span>
+    </div>
+
+    <div class="s2-kpis">
+      <div class="card kpi-card reveal">
+        <div class="icon-box">
+          <svg width="42" height="42" viewBox="0 0 42 42" fill="none">
+            <circle cx="14" cy="14" r="6" stroke="#0F2544" stroke-width="3"/>
+            <circle cx="28" cy="14" r="6" stroke="#0F2544" stroke-width="3"/>
+            <circle cx="21" cy="28" r="6" fill="#0F2544"/>
+          </svg>
+        </div>
+        <div>
+          <div class="kpi-num">6</div>
+          <div class="kpi-title">Fontes BCB integradas</div>
+          <div class="kpi-sub">Olinda (Pix + MPV) &amp; SGS</div>
+        </div>
+      </div>
+
+      <div class="card kpi-card teal reveal">
+        <div class="icon-box">
+          <svg width="42" height="42" viewBox="0 0 42 42" fill="none">
+            <rect x="7" y="9" width="28" height="6" rx="2" fill="#0D9488"/>
+            <rect x="7" y="18" width="28" height="6" rx="2" fill="#0D9488" fill-opacity="0.65"/>
+            <rect x="7" y="27" width="20" height="6" rx="2" fill="#0D9488" fill-opacity="0.35"/>
+          </svg>
+        </div>
+        <div>
+          <div class="kpi-num">~768 mil</div>
+          <div class="kpi-title">Linhas vetorizadas</div>
+          <div class="kpi-sub">Parquet Snappy + Pydantic</div>
+        </div>
+      </div>
+
+      <div class="card kpi-card amber reveal">
+        <div class="icon-box">
+          <svg width="42" height="42" viewBox="0 0 42 42" fill="none">
+            <polygon points="22,6 10,24 20,24 18,36 32,18 22,18" fill="#D97706"/>
+          </svg>
+        </div>
+        <div>
+          <div class="kpi-num">1,3 s</div>
+          <div class="kpi-title">Transforma&ccedil;&atilde;o Prata</div>
+          <div class="kpi-sub">100% vetorizada (p&oacute;s-ingest&atilde;o)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="s2-topics">
+      <div class="card topic-card reveal">
+        <div class="topic-badge">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect x="4" y="6" width="24" height="20" rx="4" stroke="#0F2544" stroke-width="2.5"/>
+            <path d="M9 13H23M9 19H17" stroke="#0D9488" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="topic-title">1. Pagina&ccedil;&atilde;o BCB</div>
+          <div class="topic-desc">Checkpoints mensais anti-<i>timeout</i> + trilha em <code>proveniencia.jsonl</code></div>
+        </div>
+      </div>
+
+      <div class="card topic-card reveal">
+        <div class="topic-badge">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="11" stroke="#0D9488" stroke-width="2.5"/>
+            <path d="M16 10V16L20 19" stroke="#0F2544" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="topic-title">2. Janelas distintas</div>
+          <div class="topic-desc">Pix (2020-11), MED (2022) e descontinua&ccedil;&atilde;o do DOC</div>
+        </div>
+      </div>
+
+      <div class="card topic-card reveal">
+        <div class="topic-badge">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <polygon points="5,8 27,8 19,17 19,25 13,27 13,17" stroke="#D97706" stroke-width="2.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="topic-title">3. Limpeza Prata</div>
+          <div class="topic-desc">De-para regional e filtro de UFs <code>N&atilde;o informado</code></div>
+        </div>
+      </div>
+
+      <div class="card topic-card reveal">
+        <div class="topic-badge">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <path d="M5 24L12 16L18 20L27 9" stroke="#0F2544" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="27" cy="9" r="3" fill="#0D9488"/>
+          </svg>
+        </div>
+        <div>
+          <div class="topic-title">4. M&eacute;tricas derivadas</div>
+          <div class="topic-desc">Defla&ccedil;&atilde;o IPCA, Juro Real (Fisher) e Contas Laranjas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pagenum">02 / 05</div>
+</section>
+
+<!-- 03_arquitetura_ouro.html -->
+<section class="slide" data-slide="3">
+  <div class="canvas-pad">
+    <div class="slide-header">
+      <div>
+        <div class="kicker">Arquitetura End-to-End</div>
+        <h2 class="slide-title">Fluxo: APIs BCB &rarr; DuckDB &rarr; Streamlit</h2>
+      </div>
+      <span class="badge-pill">Medalh&atilde;o + FCIS</span>
+    </div>
+
+    <div class="card arch-card reveal">
+      <svg viewBox="0 0 1660 520" width="1660" height="500" aria-label="Fluxo visual em 5 camadas">
+        <defs>
+          <marker id="flow-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#0F2544"/>
+          </marker>
+        </defs>
+
+        <!-- 1. APIs BCB (Nuvem) -->
+        <g transform="translate(20, 75)">
+          <rect x="0" y="0" width="260" height="370" rx="20" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+          <circle cx="130" cy="88" r="42" fill="#EFF6FF" stroke="#0F2544" stroke-width="2.5"/>
+          <path d="M111 96 C106 96 104 88 110 84 C110 74 122 70 130 74 C136 67 150 72 149 84 C156 86 154 96 147 96 Z" fill="#0F2544"/>
+          <text x="130" y="176" text-anchor="middle" font-size="26" font-weight="800" fill="#0F2544">1. APIs BCB</text>
+          <text x="130" y="226" text-anchor="middle" font-size="20" fill="#475569">Olinda Pix &amp; MPV</text>
+          <text x="130" y="258" text-anchor="middle" font-size="20" fill="#475569">SGS Selic &amp; IPCA</text>
+          <rect x="55" y="302" width="150" height="36" rx="18" fill="#E2E8F0"/>
+          <text x="130" y="325" text-anchor="middle" font-size="16" font-weight="700" fill="#0F2544" font-family="JetBrains Mono, monospace">Extra&ccedil;&atilde;o</text>
+        </g>
+
+        <line x1="286" y1="260" x2="344" y2="260" stroke="#0F2544" stroke-width="3" marker-end="url(#flow-arr)"/>
+
+        <!-- 2. Bronze (Cilindro) -->
+        <g transform="translate(352, 75)">
+          <rect x="0" y="0" width="260" height="370" rx="20" fill="#FFFBEB" stroke="#F59E0B" stroke-width="2"/>
+          <path d="M92 68 L92 112 A38 11 0 0 0 168 112 L168 68" fill="#FEF3C7" stroke="#D97706" stroke-width="2.5"/>
+          <ellipse cx="130" cy="68" rx="38" ry="11" fill="#FDE68A" stroke="#D97706" stroke-width="2.5"/>
+          <text x="130" y="176" text-anchor="middle" font-size="26" font-weight="800" fill="#B45309">2. Bronze</text>
+          <text x="130" y="226" text-anchor="middle" font-size="20" fill="#475569">Bruto imut&aacute;vel</text>
+          <text x="130" y="258" text-anchor="middle" font-size="18" fill="#475569" font-family="JetBrains Mono, monospace">proveniencia.jsonl</text>
+          <rect x="55" y="302" width="150" height="36" rx="18" fill="#FDE68A"/>
+          <text x="130" y="325" text-anchor="middle" font-size="16" font-weight="700" fill="#92400E" font-family="JetBrains Mono, monospace">Auditoria</text>
+        </g>
+
+        <line x1="618" y1="260" x2="676" y2="260" stroke="#0F2544" stroke-width="3" marker-end="url(#flow-arr)"/>
+
+        <!-- 3. Prata (Camadas Parquet) -->
+        <g transform="translate(684, 75)">
+          <rect x="0" y="0" width="260" height="370" rx="20" fill="#FFFFFF" stroke="#0F2544" stroke-width="2"/>
+          <polygon points="130,50 178,74 130,98 82,74" fill="#E2E8F0" stroke="#0F2544" stroke-width="2.2"/>
+          <polyline points="82,90 130,114 178,90" fill="none" stroke="#0F2544" stroke-width="2.5"/>
+          <polyline points="82,106 130,130 178,106" fill="none" stroke="#0D9488" stroke-width="2.5"/>
+          <text x="130" y="176" text-anchor="middle" font-size="26" font-weight="800" fill="#0F2544">3. Prata</text>
+          <text x="130" y="226" text-anchor="middle" font-size="20" fill="#475569">Parquet Snappy</text>
+          <text x="130" y="258" text-anchor="middle" font-size="20" fill="#475569">Pydantic + FCIS</text>
+          <rect x="55" y="302" width="150" height="36" rx="18" fill="#EFF6FF"/>
+          <text x="130" y="325" text-anchor="middle" font-size="16" font-weight="700" fill="#0F2544" font-family="JetBrains Mono, monospace">pytest 10/10</text>
+        </g>
+
+        <line x1="950" y1="260" x2="1008" y2="260" stroke="#0F2544" stroke-width="3" marker-end="url(#flow-arr)"/>
+
+        <!-- 4. Ouro (Estrela) -->
+        <g transform="translate(1016, 75)">
+          <rect x="0" y="0" width="260" height="370" rx="20" fill="#F0FDFA" stroke="#0D9488" stroke-width="2.5"/>
+          <polygon points="130,48 141,76 171,78 148,98 155,126 130,110 105,126 112,98 89,78 119,76" fill="#0D9488"/>
+          <text x="130" y="176" text-anchor="middle" font-size="26" font-weight="800" fill="#0D9488">4. Ouro</text>
+          <text x="130" y="226" text-anchor="middle" font-size="20" font-weight="700" fill="#0F2544">DuckDB + dbt</text>
+          <text x="130" y="258" text-anchor="middle" font-size="20" fill="#475569">14 modelos Estrela</text>
+          <rect x="45" y="302" width="170" height="36" rx="18" fill="#CCFBF1"/>
+          <text x="130" y="325" text-anchor="middle" font-size="16" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">37 testes PASS</text>
+        </g>
+
+        <line x1="1282" y1="260" x2="1340" y2="260" stroke="#0F2544" stroke-width="3" marker-end="url(#flow-arr)"/>
+
+        <!-- 5. Streamlit (Janela Painel) -->
+        <g transform="translate(1348, 75)">
+          <rect x="0" y="0" width="290" height="370" rx="20" fill="#0F2544"/>
+          <rect x="92" y="52" width="106" height="72" rx="10" fill="#1E3A5F" stroke="#5EEAD4" stroke-width="2.5"/>
+          <rect x="106" y="92" width="15" height="22" fill="#5EEAD4"/>
+          <rect x="128" y="78" width="15" height="36" fill="#5EEAD4"/>
+          <rect x="150" y="68" width="15" height="46" fill="#FFFFFF"/>
+          <rect x="172" y="84" width="15" height="30" fill="#5EEAD4"/>
+          <text x="145" y="176" text-anchor="middle" font-size="26" font-weight="800" fill="#FFFFFF">5. Streamlit</text>
+          <text x="145" y="226" text-anchor="middle" font-size="20" fill="#CBD5E1">4 abas Plotly</text>
+          <text x="145" y="258" text-anchor="middle" font-size="20" fill="#CBD5E1">Formata&ccedil;&atilde;o pt-BR</text>
+          <rect x="55" y="302" width="180" height="36" rx="18" fill="#0D9488"/>
+          <text x="145" y="325" text-anchor="middle" font-size="16" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">read_only=True</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="pagenum">03 / 05</div>
+</section>
+
+<!-- 04_modelagem_estrela.html -->
+<section class="slide" data-slide="4">
+  <div class="canvas-pad">
+    <div class="slide-header" style="margin-bottom: 20px;">
+      <div>
+        <div class="kicker">Camada Ouro &middot; DuckDB + dbt</div>
+        <h2 class="slide-title">Modelo Estrela: 5 Fatos &times; 5 Dimens&otilde;es</h2>
+      </div>
+    </div>
+
+    <div class="card erd-card" id="erdStage">
+      <svg viewBox="0 0 1760 720" width="1760" height="720" aria-label="Diagrama Entidade-Relacionamento da Camada Ouro">
+        <defs>
+          <marker id="erd-arr-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#0D9488"/>
+          </marker>
+          <marker id="erd-arr-navy" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#0F2544"/>
+          </marker>
+          <marker id="erd-arr-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#D97706"/>
+          </marker>
+        </defs>
+
+        <!-- CONEXOES: dim_tempo -> 5 Fatos -->
+        <g class="erd-edge" data-facts="macro">
+          <path d="M 380 300 C 455 300, 445 78, 520 78" fill="none" stroke="#0D9488" stroke-width="2.4" marker-end="url(#erd-arr-teal)"/>
+          <rect x="408" y="150" width="84" height="24" rx="5" fill="#F0FDFA" stroke="#99F6E4"/>
+          <text x="450" y="166" text-anchor="middle" font-size="14" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">ano_mes</text>
+        </g>
+
+        <g class="erd-edge" data-facts="segmentado">
+          <path d="M 380 330 C 450 330, 455 218, 520 218" fill="none" stroke="#0D9488" stroke-width="2.4" marker-end="url(#erd-arr-teal)"/>
+          <rect x="408" y="254" width="84" height="24" rx="5" fill="#F0FDFA" stroke="#99F6E4"/>
+          <text x="450" y="270" text-anchor="middle" font-size="14" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">ano_mes</text>
+        </g>
+
+        <g class="erd-edge" data-facts="regional">
+          <path d="M 380 360 L 520 360" fill="none" stroke="#0D9488" stroke-width="2.4" marker-end="url(#erd-arr-teal)"/>
+          <rect x="408" y="348" width="84" height="24" rx="5" fill="#F0FDFA" stroke="#99F6E4"/>
+          <text x="450" y="364" text-anchor="middle" font-size="14" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">ano_mes</text>
+        </g>
+
+        <g class="erd-edge" data-facts="etario">
+          <path d="M 380 390 C 450 390, 455 504, 520 504" fill="none" stroke="#0D9488" stroke-width="2.4" marker-end="url(#erd-arr-teal)"/>
+          <rect x="408" y="446" width="84" height="24" rx="5" fill="#F0FDFA" stroke="#99F6E4"/>
+          <text x="450" y="462" text-anchor="middle" font-size="14" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">ano_mes</text>
+        </g>
+
+        <g class="erd-edge" data-facts="cartoes">
+          <path d="M 380 420 C 455 420, 445 646, 520 646" fill="none" stroke="#D97706" stroke-width="2.4" stroke-dasharray="7,5" marker-end="url(#erd-arr-amber)"/>
+          <rect x="402" y="544" width="96" height="24" rx="5" fill="#FFFBEB" stroke="#FDE68A"/>
+          <text x="450" y="560" text-anchor="middle" font-size="14" font-weight="700" fill="#B45309" font-family="JetBrains Mono, monospace">trimestre</text>
+        </g>
+
+        <!-- CONEXOES: Fatos -> Dimensoes especificas -->
+        <g class="erd-edge" data-facts="segmentado">
+          <path d="M 1060 218 C 1125 218, 1125 162, 1200 162" fill="none" stroke="#0F2544" stroke-width="2.4" marker-end="url(#erd-arr-navy)"/>
+          <rect x="1074" y="178" width="112" height="24" rx="5" fill="#F8FAFC" stroke="#CBD5E1"/>
+          <text x="1130" y="194" text-anchor="middle" font-size="14" font-weight="700" fill="#0F2544" font-family="JetBrains Mono, monospace">natureza_id</text>
+        </g>
+
+        <g class="erd-edge" data-facts="regional">
+          <path d="M 1060 342 C 1125 342, 1125 320, 1200 320" fill="none" stroke="#0F2544" stroke-width="2.4" marker-end="url(#erd-arr-navy)"/>
+          <rect x="1068" y="302" width="124" height="22" rx="5" fill="#EFF6FF" stroke="#BFDBFE"/>
+          <text x="1130" y="317" text-anchor="middle" font-size="13" font-weight="700" fill="#1D4ED8" font-family="JetBrains Mono, monospace">pag_regiao_id</text>
+
+          <path d="M 1060 382 C 1125 382, 1125 370, 1200 370" fill="none" stroke="#0D9488" stroke-width="2.4" marker-end="url(#erd-arr-teal)"/>
+          <rect x="1068" y="376" width="124" height="22" rx="5" fill="#F0FDFA" stroke="#99F6E4"/>
+          <text x="1130" y="391" text-anchor="middle" font-size="13" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">rec_regiao_id</text>
+        </g>
+
+        <g class="erd-edge" data-facts="etario">
+          <path d="M 1060 504 L 1200 504" fill="none" stroke="#0F2544" stroke-width="2.4" marker-end="url(#erd-arr-navy)"/>
+          <rect x="1086" y="492" width="88" height="24" rx="5" fill="#F8FAFC" stroke="#CBD5E1"/>
+          <text x="1130" y="508" text-anchor="middle" font-size="14" font-weight="700" fill="#0F2544" font-family="JetBrains Mono, monospace">idade_id</text>
+        </g>
+
+        <g class="erd-edge" data-facts="cartoes">
+          <path d="M 1060 646 L 1200 646" fill="none" stroke="#0F2544" stroke-width="2.4" marker-end="url(#erd-arr-navy)"/>
+          <rect x="1082" y="634" width="96" height="24" rx="5" fill="#F8FAFC" stroke="#CBD5E1"/>
+          <text x="1130" y="650" text-anchor="middle" font-size="14" font-weight="700" fill="#0F2544" font-family="JetBrains Mono, monospace">funcao_id</text>
+        </g>
+
+        <!-- ESQUERDA: dim_tempo -->
+        <g class="erd-node" data-facts="macro segmentado regional etario cartoes">
+          <rect x="20" y="210" width="360" height="260" rx="10" fill="#FFFFFF" stroke="#0D9488" stroke-width="2.5"/>
+          <rect x="20" y="210" width="360" height="46" rx="10" fill="#0D9488"/>
+          <rect x="20" y="238" width="360" height="18" fill="#0D9488"/>
+          <text x="200" y="240" text-anchor="middle" font-size="22" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">dim_tempo</text>
+          <text x="42" y="292" font-size="17" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">PK  ano_mes (YYYYMM)</text>
+          <text x="42" y="326" font-size="17" fill="#334155" font-family="JetBrains Mono, monospace">    trimestre (YYYYQ)</text>
+          <text x="42" y="360" font-size="17" fill="#334155" font-family="JetBrains Mono, monospace">    data_mes, ano, mes</text>
+          <text x="42" y="394" font-size="17" fill="#334155" font-family="JetBrains Mono, monospace">    ano_trimestre</text>
+          <text x="42" y="428" font-size="17" fill="#334155" font-family="JetBrains Mono, monospace">    periodo_label</text>
+        </g>
+
+        <!-- CENTRO: 5 TABELAS FATO -->
+        <g class="erd-node erd-fact" data-fact="macro" data-facts="macro">
+          <rect x="520" y="16" width="540" height="122" rx="10" fill="#FFFFFF" stroke="#0F2544" stroke-width="2.4"/>
+          <rect x="520" y="16" width="540" height="40" rx="10" fill="#0F2544"/>
+          <rect x="520" y="40" width="540" height="16" fill="#0F2544"/>
+          <text x="790" y="43" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">fato_pix_macro_mensal</text>
+          <text x="542" y="88" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">PK/FK ano_mes</text>
+          <text x="542" y="118" font-size="17" fill="#475569">Pix, TED/Boleto, MED, Laranjas, Selic, IPCA</text>
+        </g>
+
+        <g class="erd-node erd-fact" data-fact="segmentado" data-facts="segmentado">
+          <rect x="520" y="156" width="540" height="122" rx="10" fill="#FFFFFF" stroke="#0F2544" stroke-width="2.4"/>
+          <rect x="520" y="156" width="540" height="40" rx="10" fill="#0F2544"/>
+          <rect x="520" y="180" width="540" height="16" fill="#0F2544"/>
+          <text x="790" y="183" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">fato_pix_segmentado_mensal</text>
+          <text x="542" y="228" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">FK ano_mes  |  FK natureza_id</text>
+          <text x="542" y="258" font-size="17" fill="#475569">qtd_transacoes, vl_transacoes (P2P/P2B/B2B)</text>
+        </g>
+
+        <g class="erd-node erd-fact" data-fact="regional" data-facts="regional">
+          <rect x="520" y="298" width="540" height="124" rx="10" fill="#FFFFFF" stroke="#0F2544" stroke-width="2.4"/>
+          <rect x="520" y="298" width="540" height="40" rx="10" fill="#0F2544"/>
+          <rect x="520" y="322" width="540" height="16" fill="#0F2544"/>
+          <text x="790" y="325" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">fato_pix_regional_mensal</text>
+          <text x="542" y="370" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">FK ano_mes | pag_regiao_id, rec_regiao_id</text>
+          <text x="542" y="400" font-size="17" fill="#475569">Matriz de fluxo interestadual (qtd e valor)</text>
+        </g>
+
+        <g class="erd-node erd-fact" data-fact="etario" data-facts="etario">
+          <rect x="520" y="442" width="540" height="122" rx="10" fill="#FFFFFF" stroke="#0F2544" stroke-width="2.4"/>
+          <rect x="520" y="442" width="540" height="40" rx="10" fill="#0F2544"/>
+          <rect x="520" y="466" width="540" height="16" fill="#0F2544"/>
+          <text x="790" y="469" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">fato_pix_etario_mensal</text>
+          <text x="542" y="514" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">FK ano_mes  |  FK idade_id</text>
+          <text x="542" y="544" font-size="17" fill="#475569">Ado&ccedil;&atilde;o geracional (qtd e valor mensal)</text>
+        </g>
+
+        <g class="erd-node erd-fact" data-fact="cartoes" data-facts="cartoes">
+          <rect x="520" y="584" width="540" height="122" rx="10" fill="#FFFFFF" stroke="#0F2544" stroke-width="2.4"/>
+          <rect x="520" y="584" width="540" height="40" rx="10" fill="#0F2544"/>
+          <rect x="520" y="608" width="540" height="16" fill="#0F2544"/>
+          <text x="790" y="611" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">fato_cartoes_vs_pix_trimestral</text>
+          <text x="542" y="656" font-size="16" font-weight="700" fill="#D97706" font-family="JetBrains Mono, monospace">FK trimestre  |  FK funcao_id</text>
+          <text x="542" y="686" font-size="17" fill="#475569">Qtd, valor, ticket m&eacute;dio e market share (%)</text>
+        </g>
+
+        <!-- DIREITA: 4 DIMENSOES ESPECIFICAS -->
+        <g class="erd-node" data-facts="segmentado">
+          <rect x="1200" y="100" width="540" height="124" rx="10" fill="#F0FDFA" stroke="#0D9488" stroke-width="2"/>
+          <rect x="1200" y="100" width="540" height="40" rx="10" fill="#0D9488"/>
+          <rect x="1200" y="124" width="540" height="16" fill="#0D9488"/>
+          <text x="1470" y="127" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">dim_natureza_pix</text>
+          <text x="1222" y="172" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">PK  natureza_id (MD5)</text>
+          <text x="1222" y="204" font-size="17" fill="#334155">natureza (P2P/P2B/B2B), finalidade, inicia&ccedil;&atilde;o</text>
+        </g>
+
+        <g class="erd-node" data-facts="regional">
+          <rect x="1200" y="274" width="540" height="136" rx="10" fill="#F0FDFA" stroke="#0D9488" stroke-width="2"/>
+          <rect x="1200" y="274" width="540" height="40" rx="10" fill="#0D9488"/>
+          <rect x="1200" y="298" width="540" height="16" fill="#0D9488"/>
+          <text x="1470" y="301" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">dim_regiao</text>
+          <text x="1222" y="346" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">PK  regiao_id (MD5)</text>
+          <text x="1222" y="376" font-size="17" fill="#334155">Norte, Nordeste, Sudeste, Sul, Centro-Oeste</text>
+          <text x="1222" y="399" font-size="15" font-weight="700" fill="#1D4ED8" font-family="JetBrains Mono, monospace">Role-playing: pagadora &amp; recebedora</text>
+        </g>
+
+        <g class="erd-node" data-facts="etario">
+          <rect x="1200" y="442" width="540" height="122" rx="10" fill="#F0FDFA" stroke="#0D9488" stroke-width="2"/>
+          <rect x="1200" y="442" width="540" height="40" rx="10" fill="#0D9488"/>
+          <rect x="1200" y="466" width="540" height="16" fill="#0D9488"/>
+          <text x="1470" y="469" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">dim_faixa_etaria</text>
+          <text x="1222" y="514" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">PK  idade_id (MD5)</text>
+          <text x="1222" y="544" font-size="17" fill="#334155">faixa_etaria (at&eacute; 19 ... 60+), ordem_etaria</text>
+        </g>
+
+        <g class="erd-node" data-facts="cartoes">
+          <rect x="1200" y="584" width="540" height="122" rx="10" fill="#F0FDFA" stroke="#0D9488" stroke-width="2"/>
+          <rect x="1200" y="584" width="540" height="40" rx="10" fill="#0D9488"/>
+          <rect x="1200" y="608" width="540" height="16" fill="#0D9488"/>
+          <text x="1470" y="611" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">dim_funcao_cartao</text>
+          <text x="1222" y="656" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">PK  funcao_id (MD5)</text>
+          <text x="1222" y="686" font-size="17" fill="#334155">nome_funcao (Pix, Cr&eacute;dito, D&eacute;bito, Pr&eacute;-Pago)</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="pagenum">04 / 05</div>
+</section>
+
+<!-- 05_qualidade_e_consumo.html -->
+<section class="slide" data-slide="5">
+  <div class="canvas-pad">
+    <div class="slide-header">
+      <div>
+        <div class="kicker">Confiabilidade &amp; Escopo</div>
+        <h2 class="slide-title">Valida&ccedil;&atilde;o dos Dados e Eixos Anal&iacute;ticos</h2>
+      </div>
+      <span class="badge-pill">Streamlit + DuckDB</span>
+    </div>
+
+    <div class="s5-grid">
+      <div class="trust-col">
+        <div class="card trust-card reveal">
+          <div class="trust-top">
+            <span class="trust-num">37 / 37</span>
+            <span class="trust-label">Testes de Regra (dbt)</span>
+          </div>
+          <ul class="trust-bullets">
+            <li>&bull; Soma das regi&otilde;es confere com o total nacional</li>
+            <li>&bull; Gr&atilde;o &uacute;nico garantido (sem duplicar trimestre ou m&ecirc;s)</li>
+            <li>&bull; Valores &ge; 0 e chaves estrangeiras v&aacute;lidas nas 5 fatos</li>
+          </ul>
+        </div>
+
+        <div class="card trust-card navy reveal">
+          <div class="trust-top">
+            <span class="trust-num">10 / 10</span>
+            <span class="trust-label">Testes Unit&aacute;rios (pytest)</span>
+          </div>
+          <ul class="trust-bullets">
+            <li>&bull; C&aacute;lculos de IPCA, Fisher e limpeza da Prata validados</li>
+            <li>&bull; Formata&ccedil;&atilde;o pt-BR e gr&aacute;ficos Plotly testados de ponta a ponta</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card roadmap-card reveal">
+        <div>
+          <div class="kicker" style="margin-bottom:4px;">Eixos Anal&iacute;ticos</div>
+          <div class="roadmap-title">Perguntas Respondidas no Painel</div>
+        </div>
+
+        <div class="roadmap-steps">
+          <div class="step-row">
+            <div class="step-num">1</div>
+            <div>
+              <div class="step-name">Macroeconomia &amp; Juro Real</div>
+              <div class="step-desc">Como o volume real do Pix cresceu frente &agrave; Selic e ao IPCA?</div>
+            </div>
+          </div>
+          <div class="step-row">
+            <div class="step-num">2</div>
+            <div>
+              <div class="step-name">Pix vs. Cart&otilde;es &amp; Tradicionais</div>
+              <div class="step-desc">Quanto o Pix tomou de Cr&eacute;dito, D&eacute;bito, TED e DOC?</div>
+            </div>
+          </div>
+          <div class="step-row">
+            <div class="step-num">3</div>
+            <div>
+              <div class="step-name">Geografia &amp; Faixa Et&aacute;ria</div>
+              <div class="step-desc">Quais regi&otilde;es concentram super&aacute;vit e quem mais adota?</div>
+            </div>
+          </div>
+          <div class="step-row">
+            <div class="step-num">4</div>
+            <div>
+              <div class="step-name">Seguran&ccedil;a &amp; Funil MED</div>
+              <div class="step-desc">Qual a efetividade das devolu&ccedil;&otilde;es e o peso das laranjas?</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-row">
+          <a class="cta-btn" href="http://localhost:8501" target="_blank" rel="noopener">Abrir Painel Streamlit (8501) &rarr;</a>
+          <a class="cta-btn secondary" href="http://localhost:8080" target="_blank" rel="noopener">Linhagem dbt docs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pagenum">05 / 05</div>
+</section>
+    </main>
+  </div>
+
+  <script>
+    class SlideDeck {
+      constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.stage = document.getElementById('deckStage');
+        this.current = 0;
+        this.setupScale();
+        this.setupNav();
+        this.setupTouch();
+        this.setupErd();
+        this.setupInlineEdit();
+        this.showSlide(0);
+      }
+
+      setupScale() {
+        const update = () => {
+          const f = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+          const x = (window.innerWidth - 1920 * f) / 2;
+          const y = (window.innerHeight - 1080 * f) / 2;
+          this.stage.style.transform = `translate(${x}px, ${y}px) scale(${f})`;
+        };
+        update();
+        window.addEventListener('resize', update);
+      }
+
+      setupNav() {
+        window.addEventListener('keydown', (e) => {
+          if (document.body.classList.contains('editing') && e.key !== 'Escape') return;
+          if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+            e.preventDefault();
+            this.showSlide(this.current + 1);
+          } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            e.preventDefault();
+            this.showSlide(this.current - 1);
+          } else if (e.key === 'Home') {
+            this.showSlide(0);
+          } else if (e.key === 'End') {
+            this.showSlide(this.slides.length - 1);
+          } else if (e.key.toLowerCase() === 'e') {
+            this.toggleEdit();
+          }
+        });
+      }
+
+      setupTouch() {
+        let startX = 0;
+        window.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+        window.addEventListener('touchend', (e) => {
+          const dx = e.changedTouches[0].clientX - startX;
+          if (Math.abs(dx) > 50) this.showSlide(this.current + (dx < 0 ? 1 : -1));
+        }, { passive: true });
+      }
+
+      setupErd() {
+        const erd = document.getElementById('erdStage');
+        if (!erd) return;
+        const facts = erd.querySelectorAll('.erd-fact');
+        const items = erd.querySelectorAll('[data-facts]');
+        facts.forEach((f) => {
+          const key = f.getAttribute('data-fact');
+          f.addEventListener('mouseenter', () => {
+            erd.classList.add('has-hover');
+            items.forEach((el) => {
+              const list = (el.getAttribute('data-facts') || '').split(' ');
+              el.classList.toggle('is-active', list.includes(key));
+            });
+          });
+          f.addEventListener('mouseleave', () => {
+            erd.classList.remove('has-hover');
+            items.forEach((el) => el.classList.remove('is-active'));
+          });
+        });
+      }
+
+      setupInlineEdit() {
+        const btn = document.getElementById('editToggle');
+        if (btn) btn.addEventListener('click', () => this.toggleEdit());
+      }
+
+      toggleEdit() {
+        const on = !document.body.classList.contains('editing');
+        document.body.classList.toggle('editing', on);
+        const btn = document.getElementById('editToggle');
+        if (btn) btn.textContent = on ? 'Salvar (Ctrl+S) / Sair (E)' : 'Editar (E)';
+        document.querySelectorAll('.slide h1, .slide h2, .slide p, .slide .kpi-num, .slide .kpi-title, .slide .kpi-sub, .slide .topic-title, .slide .topic-desc, .slide .author-name, .slide .author-url, .slide .step-name, .slide .step-desc')
+          .forEach((el) => el.setAttribute('contenteditable', on ? 'true' : 'false'));
+      }
+
+      showSlide(idx) {
+        this.current = Math.max(0, Math.min(idx, this.slides.length - 1));
+        this.slides.forEach((s, i) => {
+          const active = i === this.current;
+          s.classList.toggle('active', active);
+          s.classList.toggle('visible', active);
+        });
+      }
+    }
+
+    new SlideDeck();
+  </script>
+</body>
+</html>

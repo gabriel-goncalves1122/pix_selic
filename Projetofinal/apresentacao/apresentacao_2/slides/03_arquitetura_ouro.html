@@ -1,0 +1,94 @@
+<!-- 03_arquitetura_ouro.html -->
+<section class="slide" data-slide="3">
+  <div class="canvas-pad">
+    <div class="slide-header">
+      <div>
+        <div class="kicker">Arquitetura End-to-End</div>
+        <h2 class="slide-title">Fluxo: APIs BCB &rarr; DuckDB &rarr; Streamlit</h2>
+      </div>
+      <span class="badge-pill">Medalh&atilde;o + FCIS</span>
+    </div>
+
+    <div class="card arch-card reveal">
+      <svg viewBox="0 0 1660 520" width="1660" height="500" aria-label="Fluxo visual em 5 camadas">
+        <defs>
+          <marker id="flow-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#0F2544"/>
+          </marker>
+        </defs>
+
+        <!-- 1. APIs BCB (Nuvem) -->
+        <g transform="translate(20, 75)">
+          <rect x="0" y="0" width="260" height="370" rx="20" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+          <circle cx="130" cy="88" r="42" fill="#EFF6FF" stroke="#0F2544" stroke-width="2.5"/>
+          <path d="M111 96 C106 96 104 88 110 84 C110 74 122 70 130 74 C136 67 150 72 149 84 C156 86 154 96 147 96 Z" fill="#0F2544"/>
+          <text x="130" y="176" text-anchor="middle" font-size="26" font-weight="800" fill="#0F2544">1. APIs BCB</text>
+          <text x="130" y="226" text-anchor="middle" font-size="20" fill="#475569">Olinda Pix &amp; MPV</text>
+          <text x="130" y="258" text-anchor="middle" font-size="20" fill="#475569">SGS Selic &amp; IPCA</text>
+          <rect x="55" y="302" width="150" height="36" rx="18" fill="#E2E8F0"/>
+          <text x="130" y="325" text-anchor="middle" font-size="16" font-weight="700" fill="#0F2544" font-family="JetBrains Mono, monospace">Extra&ccedil;&atilde;o</text>
+        </g>
+
+        <line x1="286" y1="260" x2="344" y2="260" stroke="#0F2544" stroke-width="3" marker-end="url(#flow-arr)"/>
+
+        <!-- 2. Bronze (Cilindro) -->
+        <g transform="translate(352, 75)">
+          <rect x="0" y="0" width="260" height="370" rx="20" fill="#FFFBEB" stroke="#F59E0B" stroke-width="2"/>
+          <path d="M92 68 L92 112 A38 11 0 0 0 168 112 L168 68" fill="#FEF3C7" stroke="#D97706" stroke-width="2.5"/>
+          <ellipse cx="130" cy="68" rx="38" ry="11" fill="#FDE68A" stroke="#D97706" stroke-width="2.5"/>
+          <text x="130" y="176" text-anchor="middle" font-size="26" font-weight="800" fill="#B45309">2. Bronze</text>
+          <text x="130" y="226" text-anchor="middle" font-size="20" fill="#475569">Bruto imut&aacute;vel</text>
+          <text x="130" y="258" text-anchor="middle" font-size="18" fill="#475569" font-family="JetBrains Mono, monospace">proveniencia.jsonl</text>
+          <rect x="55" y="302" width="150" height="36" rx="18" fill="#FDE68A"/>
+          <text x="130" y="325" text-anchor="middle" font-size="16" font-weight="700" fill="#92400E" font-family="JetBrains Mono, monospace">Auditoria</text>
+        </g>
+
+        <line x1="618" y1="260" x2="676" y2="260" stroke="#0F2544" stroke-width="3" marker-end="url(#flow-arr)"/>
+
+        <!-- 3. Prata (Camadas Parquet) -->
+        <g transform="translate(684, 75)">
+          <rect x="0" y="0" width="260" height="370" rx="20" fill="#FFFFFF" stroke="#0F2544" stroke-width="2"/>
+          <polygon points="130,50 178,74 130,98 82,74" fill="#E2E8F0" stroke="#0F2544" stroke-width="2.2"/>
+          <polyline points="82,90 130,114 178,90" fill="none" stroke="#0F2544" stroke-width="2.5"/>
+          <polyline points="82,106 130,130 178,106" fill="none" stroke="#0D9488" stroke-width="2.5"/>
+          <text x="130" y="176" text-anchor="middle" font-size="26" font-weight="800" fill="#0F2544">3. Prata</text>
+          <text x="130" y="226" text-anchor="middle" font-size="20" fill="#475569">Parquet Snappy</text>
+          <text x="130" y="258" text-anchor="middle" font-size="20" fill="#475569">Pydantic + FCIS</text>
+          <rect x="55" y="302" width="150" height="36" rx="18" fill="#EFF6FF"/>
+          <text x="130" y="325" text-anchor="middle" font-size="16" font-weight="700" fill="#0F2544" font-family="JetBrains Mono, monospace">pytest 10/10</text>
+        </g>
+
+        <line x1="950" y1="260" x2="1008" y2="260" stroke="#0F2544" stroke-width="3" marker-end="url(#flow-arr)"/>
+
+        <!-- 4. Ouro (Estrela) -->
+        <g transform="translate(1016, 75)">
+          <rect x="0" y="0" width="260" height="370" rx="20" fill="#F0FDFA" stroke="#0D9488" stroke-width="2.5"/>
+          <polygon points="130,48 141,76 171,78 148,98 155,126 130,110 105,126 112,98 89,78 119,76" fill="#0D9488"/>
+          <text x="130" y="176" text-anchor="middle" font-size="26" font-weight="800" fill="#0D9488">4. Ouro</text>
+          <text x="130" y="226" text-anchor="middle" font-size="20" font-weight="700" fill="#0F2544">DuckDB + dbt</text>
+          <text x="130" y="258" text-anchor="middle" font-size="20" fill="#475569">14 modelos Estrela</text>
+          <rect x="45" y="302" width="170" height="36" rx="18" fill="#CCFBF1"/>
+          <text x="130" y="325" text-anchor="middle" font-size="16" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">37 testes PASS</text>
+        </g>
+
+        <line x1="1282" y1="260" x2="1340" y2="260" stroke="#0F2544" stroke-width="3" marker-end="url(#flow-arr)"/>
+
+        <!-- 5. Streamlit (Janela Painel) -->
+        <g transform="translate(1348, 75)">
+          <rect x="0" y="0" width="290" height="370" rx="20" fill="#0F2544"/>
+          <rect x="92" y="52" width="106" height="72" rx="10" fill="#1E3A5F" stroke="#5EEAD4" stroke-width="2.5"/>
+          <rect x="106" y="92" width="15" height="22" fill="#5EEAD4"/>
+          <rect x="128" y="78" width="15" height="36" fill="#5EEAD4"/>
+          <rect x="150" y="68" width="15" height="46" fill="#FFFFFF"/>
+          <rect x="172" y="84" width="15" height="30" fill="#5EEAD4"/>
+          <text x="145" y="176" text-anchor="middle" font-size="26" font-weight="800" fill="#FFFFFF">5. Streamlit</text>
+          <text x="145" y="226" text-anchor="middle" font-size="20" fill="#CBD5E1">4 abas Plotly</text>
+          <text x="145" y="258" text-anchor="middle" font-size="20" fill="#CBD5E1">Formata&ccedil;&atilde;o pt-BR</text>
+          <rect x="55" y="302" width="180" height="36" rx="18" fill="#0D9488"/>
+          <text x="145" y="325" text-anchor="middle" font-size="16" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">read_only=True</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="pagenum">03 / 05</div>
+</section>

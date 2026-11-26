@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 
 AQUI = Path(__file__).parent
-PROJ = AQUI.parent
+PROJ = AQUI.parent.parent
 BRONZE = PROJ / "dados" / "bronze" / "pix_bruto" / "Pix_DadosAbertos"
 PRATA = PROJ / "dados" / "prata" / "pix_limpo"
 

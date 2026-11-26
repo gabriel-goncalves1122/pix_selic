@@ -1,0 +1,185 @@
+<!-- 04_modelagem_estrela.html -->
+<section class="slide" data-slide="4">
+  <div class="canvas-pad">
+    <div class="slide-header" style="margin-bottom: 20px;">
+      <div>
+        <div class="kicker">Camada Ouro &middot; DuckDB + dbt</div>
+        <h2 class="slide-title">Modelo Estrela: 5 Fatos &times; 5 Dimens&otilde;es</h2>
+      </div>
+    </div>
+
+    <div class="card erd-card" id="erdStage">
+      <svg viewBox="0 0 1760 720" width="1760" height="720" aria-label="Diagrama Entidade-Relacionamento da Camada Ouro">
+        <defs>
+          <marker id="erd-arr-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#0D9488"/>
+          </marker>
+          <marker id="erd-arr-navy" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#0F2544"/>
+          </marker>
+          <marker id="erd-arr-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#D97706"/>
+          </marker>
+        </defs>
+
+        <!-- CONEXOES: dim_tempo -> 5 Fatos -->
+        <g class="erd-edge" data-facts="macro">
+          <path d="M 380 300 C 455 300, 445 78, 520 78" fill="none" stroke="#0D9488" stroke-width="2.4" marker-end="url(#erd-arr-teal)"/>
+          <rect x="408" y="150" width="84" height="24" rx="5" fill="#F0FDFA" stroke="#99F6E4"/>
+          <text x="450" y="166" text-anchor="middle" font-size="14" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">ano_mes</text>
+        </g>
+
+        <g class="erd-edge" data-facts="segmentado">
+          <path d="M 380 330 C 450 330, 455 218, 520 218" fill="none" stroke="#0D9488" stroke-width="2.4" marker-end="url(#erd-arr-teal)"/>
+          <rect x="408" y="254" width="84" height="24" rx="5" fill="#F0FDFA" stroke="#99F6E4"/>
+          <text x="450" y="270" text-anchor="middle" font-size="14" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">ano_mes</text>
+        </g>
+
+        <g class="erd-edge" data-facts="regional">
+          <path d="M 380 360 L 520 360" fill="none" stroke="#0D9488" stroke-width="2.4" marker-end="url(#erd-arr-teal)"/>
+          <rect x="408" y="348" width="84" height="24" rx="5" fill="#F0FDFA" stroke="#99F6E4"/>
+          <text x="450" y="364" text-anchor="middle" font-size="14" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">ano_mes</text>
+        </g>
+
+        <g class="erd-edge" data-facts="etario">
+          <path d="M 380 390 C 450 390, 455 504, 520 504" fill="none" stroke="#0D9488" stroke-width="2.4" marker-end="url(#erd-arr-teal)"/>
+          <rect x="408" y="446" width="84" height="24" rx="5" fill="#F0FDFA" stroke="#99F6E4"/>
+          <text x="450" y="462" text-anchor="middle" font-size="14" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">ano_mes</text>
+        </g>
+
+        <g class="erd-edge" data-facts="cartoes">
+          <path d="M 380 420 C 455 420, 445 646, 520 646" fill="none" stroke="#D97706" stroke-width="2.4" stroke-dasharray="7,5" marker-end="url(#erd-arr-amber)"/>
+          <rect x="402" y="544" width="96" height="24" rx="5" fill="#FFFBEB" stroke="#FDE68A"/>
+          <text x="450" y="560" text-anchor="middle" font-size="14" font-weight="700" fill="#B45309" font-family="JetBrains Mono, monospace">trimestre</text>
+        </g>
+
+        <!-- CONEXOES: Fatos -> Dimensoes especificas -->
+        <g class="erd-edge" data-facts="segmentado">
+          <path d="M 1060 218 C 1125 218, 1125 162, 1200 162" fill="none" stroke="#0F2544" stroke-width="2.4" marker-end="url(#erd-arr-navy)"/>
+          <rect x="1074" y="178" width="112" height="24" rx="5" fill="#F8FAFC" stroke="#CBD5E1"/>
+          <text x="1130" y="194" text-anchor="middle" font-size="14" font-weight="700" fill="#0F2544" font-family="JetBrains Mono, monospace">natureza_id</text>
+        </g>
+
+        <g class="erd-edge" data-facts="regional">
+          <path d="M 1060 342 C 1125 342, 1125 320, 1200 320" fill="none" stroke="#0F2544" stroke-width="2.4" marker-end="url(#erd-arr-navy)"/>
+          <rect x="1068" y="302" width="124" height="22" rx="5" fill="#EFF6FF" stroke="#BFDBFE"/>
+          <text x="1130" y="317" text-anchor="middle" font-size="13" font-weight="700" fill="#1D4ED8" font-family="JetBrains Mono, monospace">pag_regiao_id</text>
+
+          <path d="M 1060 382 C 1125 382, 1125 370, 1200 370" fill="none" stroke="#0D9488" stroke-width="2.4" marker-end="url(#erd-arr-teal)"/>
+          <rect x="1068" y="376" width="124" height="22" rx="5" fill="#F0FDFA" stroke="#99F6E4"/>
+          <text x="1130" y="391" text-anchor="middle" font-size="13" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">rec_regiao_id</text>
+        </g>
+
+        <g class="erd-edge" data-facts="etario">
+          <path d="M 1060 504 L 1200 504" fill="none" stroke="#0F2544" stroke-width="2.4" marker-end="url(#erd-arr-navy)"/>
+          <rect x="1086" y="492" width="88" height="24" rx="5" fill="#F8FAFC" stroke="#CBD5E1"/>
+          <text x="1130" y="508" text-anchor="middle" font-size="14" font-weight="700" fill="#0F2544" font-family="JetBrains Mono, monospace">idade_id</text>
+        </g>
+
+        <g class="erd-edge" data-facts="cartoes">
+          <path d="M 1060 646 L 1200 646" fill="none" stroke="#0F2544" stroke-width="2.4" marker-end="url(#erd-arr-navy)"/>
+          <rect x="1082" y="634" width="96" height="24" rx="5" fill="#F8FAFC" stroke="#CBD5E1"/>
+          <text x="1130" y="650" text-anchor="middle" font-size="14" font-weight="700" fill="#0F2544" font-family="JetBrains Mono, monospace">funcao_id</text>
+        </g>
+
+        <!-- ESQUERDA: dim_tempo -->
+        <g class="erd-node" data-facts="macro segmentado regional etario cartoes">
+          <rect x="20" y="210" width="360" height="260" rx="10" fill="#FFFFFF" stroke="#0D9488" stroke-width="2.5"/>
+          <rect x="20" y="210" width="360" height="46" rx="10" fill="#0D9488"/>
+          <rect x="20" y="238" width="360" height="18" fill="#0D9488"/>
+          <text x="200" y="240" text-anchor="middle" font-size="22" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">dim_tempo</text>
+          <text x="42" y="292" font-size="17" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">PK  ano_mes (YYYYMM)</text>
+          <text x="42" y="326" font-size="17" fill="#334155" font-family="JetBrains Mono, monospace">    trimestre (YYYYQ)</text>
+          <text x="42" y="360" font-size="17" fill="#334155" font-family="JetBrains Mono, monospace">    data_mes, ano, mes</text>
+          <text x="42" y="394" font-size="17" fill="#334155" font-family="JetBrains Mono, monospace">    ano_trimestre</text>
+          <text x="42" y="428" font-size="17" fill="#334155" font-family="JetBrains Mono, monospace">    periodo_label</text>
+        </g>
+
+        <!-- CENTRO: 5 TABELAS FATO -->
+        <g class="erd-node erd-fact" data-fact="macro" data-facts="macro">
+          <rect x="520" y="16" width="540" height="122" rx="10" fill="#FFFFFF" stroke="#0F2544" stroke-width="2.4"/>
+          <rect x="520" y="16" width="540" height="40" rx="10" fill="#0F2544"/>
+          <rect x="520" y="40" width="540" height="16" fill="#0F2544"/>
+          <text x="790" y="43" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">fato_pix_macro_mensal</text>
+          <text x="542" y="88" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">PK/FK ano_mes</text>
+          <text x="542" y="118" font-size="17" fill="#475569">Pix, TED/Boleto, MED, Laranjas, Selic, IPCA</text>
+        </g>
+
+        <g class="erd-node erd-fact" data-fact="segmentado" data-facts="segmentado">
+          <rect x="520" y="156" width="540" height="122" rx="10" fill="#FFFFFF" stroke="#0F2544" stroke-width="2.4"/>
+          <rect x="520" y="156" width="540" height="40" rx="10" fill="#0F2544"/>
+          <rect x="520" y="180" width="540" height="16" fill="#0F2544"/>
+          <text x="790" y="183" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">fato_pix_segmentado_mensal</text>
+          <text x="542" y="228" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">FK ano_mes  |  FK natureza_id</text>
+          <text x="542" y="258" font-size="17" fill="#475569">qtd_transacoes, vl_transacoes (P2P/P2B/B2B)</text>
+        </g>
+
+        <g class="erd-node erd-fact" data-fact="regional" data-facts="regional">
+          <rect x="520" y="298" width="540" height="124" rx="10" fill="#FFFFFF" stroke="#0F2544" stroke-width="2.4"/>
+          <rect x="520" y="298" width="540" height="40" rx="10" fill="#0F2544"/>
+          <rect x="520" y="322" width="540" height="16" fill="#0F2544"/>
+          <text x="790" y="325" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">fato_pix_regional_mensal</text>
+          <text x="542" y="370" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">FK ano_mes | pag_regiao_id, rec_regiao_id</text>
+          <text x="542" y="400" font-size="17" fill="#475569">Matriz de fluxo interestadual (qtd e valor)</text>
+        </g>
+
+        <g class="erd-node erd-fact" data-fact="etario" data-facts="etario">
+          <rect x="520" y="442" width="540" height="122" rx="10" fill="#FFFFFF" stroke="#0F2544" stroke-width="2.4"/>
+          <rect x="520" y="442" width="540" height="40" rx="10" fill="#0F2544"/>
+          <rect x="520" y="466" width="540" height="16" fill="#0F2544"/>
+          <text x="790" y="469" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">fato_pix_etario_mensal</text>
+          <text x="542" y="514" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">FK ano_mes  |  FK idade_id</text>
+          <text x="542" y="544" font-size="17" fill="#475569">Ado&ccedil;&atilde;o geracional (qtd e valor mensal)</text>
+        </g>
+
+        <g class="erd-node erd-fact" data-fact="cartoes" data-facts="cartoes">
+          <rect x="520" y="584" width="540" height="122" rx="10" fill="#FFFFFF" stroke="#0F2544" stroke-width="2.4"/>
+          <rect x="520" y="584" width="540" height="40" rx="10" fill="#0F2544"/>
+          <rect x="520" y="608" width="540" height="16" fill="#0F2544"/>
+          <text x="790" y="611" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">fato_cartoes_vs_pix_trimestral</text>
+          <text x="542" y="656" font-size="16" font-weight="700" fill="#D97706" font-family="JetBrains Mono, monospace">FK trimestre  |  FK funcao_id</text>
+          <text x="542" y="686" font-size="17" fill="#475569">Qtd, valor, ticket m&eacute;dio e market share (%)</text>
+        </g>
+
+        <!-- DIREITA: 4 DIMENSOES ESPECIFICAS -->
+        <g class="erd-node" data-facts="segmentado">
+          <rect x="1200" y="100" width="540" height="124" rx="10" fill="#F0FDFA" stroke="#0D9488" stroke-width="2"/>
+          <rect x="1200" y="100" width="540" height="40" rx="10" fill="#0D9488"/>
+          <rect x="1200" y="124" width="540" height="16" fill="#0D9488"/>
+          <text x="1470" y="127" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">dim_natureza_pix</text>
+          <text x="1222" y="172" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">PK  natureza_id (MD5)</text>
+          <text x="1222" y="204" font-size="17" fill="#334155">natureza (P2P/P2B/B2B), finalidade, inicia&ccedil;&atilde;o</text>
+        </g>
+
+        <g class="erd-node" data-facts="regional">
+          <rect x="1200" y="274" width="540" height="136" rx="10" fill="#F0FDFA" stroke="#0D9488" stroke-width="2"/>
+          <rect x="1200" y="274" width="540" height="40" rx="10" fill="#0D9488"/>
+          <rect x="1200" y="298" width="540" height="16" fill="#0D9488"/>
+          <text x="1470" y="301" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">dim_regiao</text>
+          <text x="1222" y="346" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">PK  regiao_id (MD5)</text>
+          <text x="1222" y="376" font-size="17" fill="#334155">Norte, Nordeste, Sudeste, Sul, Centro-Oeste</text>
+          <text x="1222" y="399" font-size="15" font-weight="700" fill="#1D4ED8" font-family="JetBrains Mono, monospace">Role-playing: pagadora &amp; recebedora</text>
+        </g>
+
+        <g class="erd-node" data-facts="etario">
+          <rect x="1200" y="442" width="540" height="122" rx="10" fill="#F0FDFA" stroke="#0D9488" stroke-width="2"/>
+          <rect x="1200" y="442" width="540" height="40" rx="10" fill="#0D9488"/>
+          <rect x="1200" y="466" width="540" height="16" fill="#0D9488"/>
+          <text x="1470" y="469" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">dim_faixa_etaria</text>
+          <text x="1222" y="514" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">PK  idade_id (MD5)</text>
+          <text x="1222" y="544" font-size="17" fill="#334155">faixa_etaria (at&eacute; 19 ... 60+), ordem_etaria</text>
+        </g>
+
+        <g class="erd-node" data-facts="cartoes">
+          <rect x="1200" y="584" width="540" height="122" rx="10" fill="#F0FDFA" stroke="#0D9488" stroke-width="2"/>
+          <rect x="1200" y="584" width="540" height="40" rx="10" fill="#0D9488"/>
+          <rect x="1200" y="608" width="540" height="16" fill="#0D9488"/>
+          <text x="1470" y="611" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFFFF" font-family="JetBrains Mono, monospace">dim_funcao_cartao</text>
+          <text x="1222" y="656" font-size="16" font-weight="700" fill="#0D9488" font-family="JetBrains Mono, monospace">PK  funcao_id (MD5)</text>
+          <text x="1222" y="686" font-size="17" fill="#334155">nome_funcao (Pix, Cr&eacute;dito, D&eacute;bito, Pr&eacute;-Pago)</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="pagenum">04 / 05</div>
+</section>
